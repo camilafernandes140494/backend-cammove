@@ -17,9 +17,9 @@ export class AuthController {
   // Rota para login de um usuário
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@Body() body: { idToken: string }) {
-    const { idToken } = body;
-    return this.authService.loginUser(idToken);
+  async login(@Body() body: { email: string; password: string }) {
+    const { email, password } = body;
+    return this.authService.loginUser(email, password);
   }
 
   // Rota para verificar o token do usuário

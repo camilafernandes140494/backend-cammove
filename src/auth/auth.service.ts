@@ -18,12 +18,15 @@ export class AuthService {
   }
 
   // Método para login de um usuário - verificando o token JWT
-  async loginUser(idToken: string): Promise<any> {
-    try {
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
-      return decodedToken;
-    } catch (error) {
-      throw new Error('Token inválido: ' + error.message);
+  async loginUser(email: string, password: string) {
+    // Lógica para autenticar o usuário, ex: usando Firebase Authentication
+    const userRecord = await admin.auth().getUserByEmail(email);
+    if (userRecord) {
+      // Gerar o idToken após a autenticação bem-sucedida
+      const idToken = await admin.auth().createCustomToken(userRecord.uid);
+      return { idToken };
+    } else {
+      throw new Error('User not found');
     }
   }
 
