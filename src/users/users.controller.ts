@@ -12,8 +12,10 @@ import {
 import { UsersService } from './users.service';
 import { User, UpdateUser } from './user.types'; // Importando o tipo User e UpdateUserDto
 import { PermissionType } from 'src/permission/permission.types';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('users')
+@ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 

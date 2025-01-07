@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as admin from 'firebase-admin';
 
 @Injectable()
-export class AssignUsersService {
+export class RelationshipsService {
   private firestore = admin.firestore(); // Inicializa o Firestore
 
   async assignStudentToTeacher(
@@ -23,24 +23,60 @@ export class AssignUsersService {
       }
 
       if (
-        teacher.data()?.role !== 'TEACHER' ||
-        student.data()?.role !== 'STUDENT'
+        teacher.data()?.permission !== 'TEACHER' ||
+        student.data()?.permission !== 'STUDENT'
       ) {
         throw new Error('Permissões inválidas para criar vínculo');
       }
 
-      // Criar o vínculo na coleção "relationships"
       const relationshipRef = this.firestore.collection('relationships').doc();
       await relationshipRef.set({
         teacherId,
         studentId,
         createdAt,
-        status: 'active', // ou 'pending', dependendo do fluxo
+        status: 'ACTIVE',
       });
 
       return { message: 'Vínculo criado com sucesso', id: relationshipRef.id };
     } catch (error) {
       throw new Error('Erro ao criar vínculo: ' + error.message);
+    }
+  }
+  async updateRelationship(
+    relationshipId: string,
+    updateData: { status?: string; [key: string]: any },
+  ): Promise<any> {
+    try {
+      const relationshipRef = this.firestore
+        .collection('relationships')
+        .doc(relationshipId);
+      const doc = await relationshipRef.get();
+
+      if (!doc.exists) {
+        throw new Error('Vínculo não encontrado');
+      }
+
+      // Atualiza apenas os campos fornecidos
+      const dataToUpdate: any = {};
+
+      if (updateData.status) {
+        dataToUpdate.status = updateData.status;
+      }
+
+      // Adicione aqui qualquer outra lógica para atualizar outros campos, se necessário
+
+      if (Object.keys(dataToUpdate).length === 0) {
+        throw new Error('Nenhum dado válido para atualizar');
+      }
+
+      await relationshipRef.update(dataToUpdate);
+
+      return {
+        message: 'Vínculo atualizado com sucesso',
+        updatedFields: dataToUpdate,
+      };
+    } catch (error) {
+      throw new Error('Erro ao atualizar vínculo: ' + error.message);
     }
   }
 }
