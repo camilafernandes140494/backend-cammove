@@ -73,6 +73,7 @@ export type PhysicalAssessmentData = {
   // Objetivos de Fitness
   fitnessGoals: string;
 
+  observations: string;
   // Data da avaliação
   assessmentDate: string;
 };

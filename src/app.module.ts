@@ -9,6 +9,8 @@ import { RelationshipsService } from './relationships/relationships.service';
 import { RelationshipsController } from './relationships/relationships.controller';
 import { PhysicalAssessmentsController } from './PhysicalAssessments/physicalAssessments.controller';
 import { PhysicalAssessmentsService } from './PhysicalAssessments/physicalAssessments.service';
+import { ExercisesController } from './exercises/exercises.controller';
+import { ExercisesService } from './exercises/exercises.service';
 
 @Module({
   imports: [],
@@ -17,6 +19,7 @@ import { PhysicalAssessmentsService } from './PhysicalAssessments/physicalAssess
     UsersController,
     RelationshipsController,
     PhysicalAssessmentsController,
+    ExercisesController,
   ],
   providers: [
     AuthService,
@@ -24,6 +27,7 @@ import { PhysicalAssessmentsService } from './PhysicalAssessments/physicalAssess
     MigrationService,
     RelationshipsService,
     PhysicalAssessmentsService,
+    ExercisesService,
   ],
 })
 export class AppModule {}
