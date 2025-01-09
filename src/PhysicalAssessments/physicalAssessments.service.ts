@@ -15,7 +15,6 @@ export class PhysicalAssessmentsService {
         .doc(relationshipIdId);
       await assessmentRef.set({
         ...assessmentData,
-        // Timestamp de criação
         createdAt,
       });
 
