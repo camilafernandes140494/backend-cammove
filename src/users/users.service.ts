@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { User, UpdateUser } from './user.types';
-import * as admin from 'firebase-admin';
+import admin from 'src/firebase/firebase.config';
 
 @Injectable()
 export class UsersService {
