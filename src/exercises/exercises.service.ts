@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Exercise } from './exercises.types';
-import * as admin from 'firebase-admin';
+import admin from 'src/firebase/firebase.config';
+
 @Injectable()
 export class ExercisesService {
   private firestore = admin.firestore();
