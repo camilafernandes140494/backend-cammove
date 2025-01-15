@@ -1,5 +1,5 @@
 import { PhysicalAssessmentData } from './physicalAssessments.types';
-import * as admin from 'firebase-admin';
+import admin from 'src/firebase/firebase.config';
 
 export class PhysicalAssessmentsService {
   private firestore = admin.firestore();
