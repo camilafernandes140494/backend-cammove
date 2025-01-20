@@ -22,7 +22,6 @@ export class AuthService {
     // URL da API do Firebase para autenticação
 
     const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.PRIVATE_KEY!}`;
-    console.log(url);
     try {
       // Faz a requisição usando fetch
       const response = await fetch(url, {
@@ -55,7 +54,7 @@ export class AuthService {
       // };
     } catch (error: any) {
       console.log(error);
-      throw new Error(error.message || 'Failed to login user');
+      throw new Error(error || 'Failed to login user');
     }
   }
 
