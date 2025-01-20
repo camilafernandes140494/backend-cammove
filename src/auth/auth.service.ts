@@ -17,16 +17,42 @@ export class AuthService {
     }
   }
 
-  // Método para login de um usuário - verificando o token JWT
+  // Método para autenticar o usuário
   async loginUser(email: string, password: string) {
-    // Lógica para autenticar o usuário, ex: usando Firebase Authentication
-    const userRecord = await admin.auth().getUserByEmail(email);
-    if (userRecord) {
-      // Gerar o idToken após a autenticação bem-sucedida
-      const idToken = await admin.auth().createCustomToken(userRecord.uid);
-      return { idToken };
-    } else {
-      throw new Error('User not found');
+    try {
+      // URL da API do Firebase para autenticação
+      const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.PRIVATE_KEY!.replace(/\\n/g, '\n')}`;
+
+      // Faz a requisição usando fetch
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          returnSecureToken: true,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error?.message || 'Failed to login user');
+      }
+
+      const { idToken, refreshToken, localId } = await response.json();
+
+      // Gera um token JWT customizado usando o Firebase Admin SDK
+      const customToken = await admin.auth().createCustomToken(localId);
+
+      return {
+        idToken, // Token JWT do Firebase
+        refreshToken, // Token de renovação
+        customToken, // Token customizado gerado pelo Firebase Admin SDK
+      };
+    } catch (error: any) {
+      throw new Error(error.message || 'Failed to login user');
     }
   }
 
