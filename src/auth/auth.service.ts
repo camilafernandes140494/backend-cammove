@@ -19,10 +19,11 @@ export class AuthService {
 
   // Método para autenticar o usuário
   async loginUser(email: string, password: string) {
-    try {
-      // URL da API do Firebase para autenticação
-      const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.PRIVATE_KEY!.replace(/\\n/g, '\n')}`;
+    // URL da API do Firebase para autenticação
 
+    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.PRIVATE_KEY!}`;
+    console.log(url);
+    try {
       // Faz a requisição usando fetch
       const response = await fetch(url, {
         method: 'POST',
