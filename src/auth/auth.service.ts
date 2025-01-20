@@ -39,6 +39,7 @@ export class AuthService {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.log('errorData', errorData);
         throw new Error(errorData.error?.message || 'Failed to login user');
       }
       return response.json();
@@ -53,6 +54,7 @@ export class AuthService {
       //   customToken, // Token customizado gerado pelo Firebase Admin SDK
       // };
     } catch (error: any) {
+      console.log(error);
       throw new Error(error.message || 'Failed to login user');
     }
   }
