@@ -40,17 +40,17 @@ export class AuthService {
         const errorData = await response.json();
         throw new Error(errorData.error?.message || 'Failed to login user');
       }
+      return response.json();
+      // const { idToken, refreshToken, localId } = await response.json();
 
-      const { idToken, refreshToken, localId } = await response.json();
+      // // Gera um token JWT customizado usando o Firebase Admin SDK
+      // const customToken = await admin.auth().createCustomToken(localId);
 
-      // Gera um token JWT customizado usando o Firebase Admin SDK
-      const customToken = await admin.auth().createCustomToken(localId);
-
-      return {
-        idToken, // Token JWT do Firebase
-        refreshToken, // Token de renovação
-        customToken, // Token customizado gerado pelo Firebase Admin SDK
-      };
+      // return {
+      //   idToken, // Token JWT do Firebase
+      //   refreshToken, // Token de renovação
+      //   customToken, // Token customizado gerado pelo Firebase Admin SDK
+      // };
     } catch (error: any) {
       throw new Error(error.message || 'Failed to login user');
     }
