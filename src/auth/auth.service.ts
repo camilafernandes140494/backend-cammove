@@ -18,12 +18,11 @@ export class AuthService {
   }
 
   // Método para autenticar o usuário
-  async loginUser(email: string, password: string) {
-    // URL da API do Firebase para autenticação
+  async loginUser(email: string, password: string): Promise<any> {
+    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.APIKEY!}`;
 
-    const url = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${process.env.PRIVATE_KEY!}`;
     try {
-      // Faz a requisição usando fetch
+      // Faz a requisição ao Firebase para validar o login usando fetch
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -32,29 +31,26 @@ export class AuthService {
         body: JSON.stringify({
           email,
           password,
-          returnSecureToken: true,
+          returnSecureToken: true, // Garante que o Firebase irá retornar um idToken
         }),
       });
 
+      // Verifica se a requisição foi bem-sucedida
       if (!response.ok) {
-        const errorData = await response.json();
-        console.log('errorData', errorData);
-        throw new Error(errorData.error?.message || 'Failed to login user');
+        throw new Error('Erro ao autenticar o usuário');
       }
-      return response.json();
-      // const { idToken, refreshToken, localId } = await response.json();
 
-      // // Gera um token JWT customizado usando o Firebase Admin SDK
-      // const customToken = await admin.auth().createCustomToken(localId);
+      // Converte a resposta para JSON
+      const data = await response.json();
 
-      // return {
-      //   idToken, // Token JWT do Firebase
-      //   refreshToken, // Token de renovação
-      //   customToken, // Token customizado gerado pelo Firebase Admin SDK
-      // };
-    } catch (error: any) {
-      console.log(error);
-      throw new Error(error || 'Failed to login user');
+      // Retorna os tokens
+      return {
+        idToken: data.idToken,
+        refreshToken: data.refreshToken,
+        expiresIn: data.expiresIn,
+      };
+    } catch (error) {
+      throw new Error('Usuário ou senha inválidos' + error.message);
     }
   }
 
@@ -62,6 +58,7 @@ export class AuthService {
   async logoutUser(uid: string): Promise<void> {
     try {
       // Aqui você pode invalidar sessões ou realizar outras tarefas de logout, caso necessário
+      console.log(uid);
     } catch (error) {
       throw new Error('Erro ao realizar logout: ' + error.message);
     }
