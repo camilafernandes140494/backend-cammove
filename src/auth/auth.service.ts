@@ -16,6 +16,15 @@ export class AuthService {
       throw new Error('Erro ao registrar usuário: ' + error.message);
     }
   }
+  // Método para verificar o token do usuário
+  async verifyToken(idToken: string): Promise<any> {
+    try {
+      const decodedToken = await admin.auth().verifyIdToken(idToken);
+      return decodedToken; // Retorna as informações decodificadas do token
+    } catch (error) {
+      throw new Error('Token inválido ou expirado: ' + error.message);
+    }
+  }
 
   // Método para autenticar o usuário
   async loginUser(email: string, password: string): Promise<any> {
@@ -43,12 +52,10 @@ export class AuthService {
       // Converte a resposta para JSON
       const data = await response.json();
 
+      const user = await this.verifyToken(data.idToken);
+
       // Retorna os tokens
-      return {
-        idToken: data.idToken,
-        refreshToken: data.refreshToken,
-        expiresIn: data.expiresIn,
-      };
+      return user;
     } catch (error) {
       throw new Error('Usuário ou senha inválidos' + error.message);
     }
@@ -61,16 +68,6 @@ export class AuthService {
       console.log(uid);
     } catch (error) {
       throw new Error('Erro ao realizar logout: ' + error.message);
-    }
-  }
-
-  // Método para verificar o token do usuário
-  async verifyToken(idToken: string): Promise<any> {
-    try {
-      const decodedToken = await admin.auth().verifyIdToken(idToken);
-      return decodedToken; // Retorna as informações decodificadas do token
-    } catch (error) {
-      throw new Error('Token inválido ou expirado: ' + error.message);
     }
   }
 }
