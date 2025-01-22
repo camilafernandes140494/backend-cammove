@@ -22,7 +22,9 @@ export class MigrationService implements OnModuleInit {
 
     if (!migrationDoc.exists) {
       console.log('Iniciando migração de permissões...');
-      const permissionRef = this.firestore.collection('permissions').doc();
+      const permissionRef = this.firestore
+        .collection('permissions')
+        .doc('data');
 
       for (const permission of permissions) {
         // Adiciona permissão ao banco de dados
