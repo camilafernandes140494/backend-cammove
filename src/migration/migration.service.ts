@@ -25,7 +25,7 @@ export class MigrationService implements OnModuleInit {
       for (const permission of permissions) {
         const permissionRef = this.firestore
           .collection('permissions')
-          .doc('data');
+          .doc(permission.id);
         const doc = await permissionRef.get();
 
         if (!doc.exists) {
