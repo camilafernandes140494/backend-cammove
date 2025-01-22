@@ -22,21 +22,15 @@ export class MigrationService implements OnModuleInit {
 
     if (!migrationDoc.exists) {
       console.log('Iniciando migração de permissões...');
-      for (const permission of permissions) {
-        const permissionRef = this.firestore
-          .collection('permissions')
-          .doc(permission.id);
-        const doc = await permissionRef.get();
+      const permissionRef = this.firestore.collection('permissions').doc();
 
-        if (!doc.exists) {
-          // Adiciona permissão ao banco de dados
-          await permissionRef.set({
-            id: permission.id,
-            name: permission.name,
-            createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          });
-          console.log(`Permissão ${permission.name} criada com sucesso.`);
-        }
+      for (const permission of permissions) {
+        // Adiciona permissão ao banco de dados
+        await permissionRef.set({
+          id: permissionRef.id,
+          name: permission.name,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+        });
       }
 
       // Marca a migração como executada
