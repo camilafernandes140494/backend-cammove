@@ -10,7 +10,13 @@ export class UsersService {
   async createUser(id: string, userData: User): Promise<any> {
     try {
       const newUserRef = this.firestore.collection('users').doc(id); // Cria um novo documento com ID automático
-      await newUserRef.set(userData); // Salva os dados no Firestore
+      const user = await newUserRef.get();
+
+      if (!user.exists) {
+        await newUserRef.set(userData);
+      }
+      // Salva os dados no Firestore
+      await newUserRef.update(userData);
       return { message: 'Usuário criado com sucesso', id: newUserRef.id };
     } catch (error) {
       throw new Error('Erro ao salvar usuário: ' + error.message);

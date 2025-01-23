@@ -20,7 +20,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   // Rota para salvar usuário no Firestore
-  @Post()
+  @Post(':id')
   @HttpCode(HttpStatus.CREATED)
   async createUser(@Param('id') id: string, @Body() body: User) {
     // Adicionando a data de criação automaticamente
