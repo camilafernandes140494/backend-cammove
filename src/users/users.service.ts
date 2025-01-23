@@ -7,9 +7,9 @@ export class UsersService {
   private firestore = admin.firestore(); // Inicializa o Firestore
 
   // Método para salvar usuário no Firestore
-  async createUser(userData: User): Promise<any> {
+  async createUser(id: string, userData: User): Promise<any> {
     try {
-      const newUserRef = this.firestore.collection('users').doc(); // Cria um novo documento com ID automático
+      const newUserRef = this.firestore.collection('users').doc(id); // Cria um novo documento com ID automático
       await newUserRef.set(userData); // Salva os dados no Firestore
       return { message: 'Usuário criado com sucesso', id: newUserRef.id };
     } catch (error) {

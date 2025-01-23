@@ -22,7 +22,7 @@ export class UsersController {
   // Rota para salvar usuário no Firestore
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createUser(@Body() body: User) {
+  async createUser(@Param('id') id: string, @Body() body: User) {
     // Adicionando a data de criação automaticamente
     const createdAt = new Date().toISOString(); // Data de criação no formato ISO 8601
     const updatedAt = '';
@@ -30,7 +30,7 @@ export class UsersController {
 
     const { name, gender, birthDate, permission } = body;
 
-    return this.usersService.createUser({
+    return this.usersService.createUser(id, {
       name,
       gender,
       birthDate,
