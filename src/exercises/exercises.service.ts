@@ -8,10 +8,16 @@ export class ExercisesService {
 
   async createExercise(exerciseData: Exercise): Promise<any> {
     try {
+      // Cria um novo documento na coleção 'exercises' com dados de 'exerciseData'
       const newExerciseRef = this.firestore.collection('exercises').doc();
+
+      // Armazena o objeto diretamente como o conteúdo do documento
       await newExerciseRef.set(exerciseData);
+
+      // Retorna uma mensagem com o ID do documento criado
       return { message: 'Exercício criado com sucesso', id: newExerciseRef.id };
     } catch (error) {
+      // Se ocorrer um erro, lança uma exceção com a mensagem de erro
       throw new Error('Erro ao salvar o exercício: ' + error.message);
     }
   }
