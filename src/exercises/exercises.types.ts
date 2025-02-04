@@ -7,3 +7,5 @@ export type Exercise = {
   updatedAt?: string;
   deletedAt?: string;
 };
+
+export type UpdateExercise = Partial<Exercise>;

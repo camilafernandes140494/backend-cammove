@@ -1,4 +1,12 @@
-import { Body, Post, HttpCode, HttpStatus, Controller } from '@nestjs/common';
+import {
+  Body,
+  Post,
+  HttpCode,
+  HttpStatus,
+  Controller,
+  Get,
+  Query,
+} from '@nestjs/common';
 import { Exercise } from './exercises.types';
 import { ExercisesService } from './exercises.service';
 
@@ -26,5 +34,22 @@ export class ExercisesController {
       updatedAt,
       deletedAt,
     });
+  }
+
+  @Get()
+  @HttpCode(HttpStatus.OK)
+  async getExercise(
+    @Query('name') name?: string,
+    @Query('type') type?: string,
+    @Query('deletedAt') deletedAt?: string,
+    @Query('description') description?: string,
+  ): Promise<Exercise[]> {
+    try {
+      const filters = { name, type, deletedAt, description };
+      return await this.exercisesService.getExercises(filters);
+    } catch (error) {
+      console.error('Erro ao buscar exercicios: ', error);
+      throw error;
+    }
   }
 }

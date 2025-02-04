@@ -13,11 +13,31 @@ import { UsersService } from './users.service';
 import { User, UpdateUser } from './user.types'; // Importando o tipo User e UpdateUserDto
 import { PermissionType } from 'src/permission/permission.types';
 import { ApiTags } from '@nestjs/swagger';
+// import * as bcrypt from 'bcrypt';
 
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  //pensando se posso adicionar admin
+  // private readonly adminPasswordHash =
+  //   '$2b$10$EIXhM58zXKHgYu5TtW5AOe9Bs12YfiXLzFIS4RHTwW9eRtqk9Jhuy';
+
+  // // Rota para validar a senha de admin
+  // @Post('validate-password')
+  // @HttpCode(HttpStatus.OK)
+  // async validatePassword(
+  //   @Body('password') password: string,
+  // ): Promise<{ valid: boolean }> {
+  //   try {
+  //     const isValid = await bcrypt.compare(password, this.adminPasswordHash);
+  //     return { valid: isValid };
+  //   } catch (error) {
+  //     console.error('Erro ao validar senha:', error);
+  //     throw error;
+  //   }
+  // }
 
   // Rota para salvar usuário no Firestore
   @Post(':id')
