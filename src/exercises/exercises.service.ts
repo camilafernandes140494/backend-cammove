@@ -36,18 +36,25 @@ export class ExercisesService {
     if (filters.description) {
       query = query
         .orderBy('description')
-        .startAt(filters.name)
-        .endAt(filters.name + '\uf8ff');
+        .startAt(filters.description)
+        .endAt(filters.description + '\uf8ff');
     }
     if (filters.deletedAt) {
       query = query.where('deletedAt', '==', filters.deletedAt);
     }
-    if (filters.type) {
+    if (filters.category) {
       query = query
-        .orderBy('type')
-        .startAt(filters.name)
-        .endAt(filters.name + '\uf8ff');
+        .orderBy('category')
+        .startAt(filters.category)
+        .endAt(filters.category + '\uf8ff');
     }
+    if (filters.muscleGroup) {
+      query = query
+        .orderBy('muscleGroup')
+        .startAt(filters.muscleGroup)
+        .endAt(filters.muscleGroup + '\uf8ff');
+    }
+
     const snapshot = await query.get();
     if (snapshot.empty) {
       return [];

@@ -1,8 +1,9 @@
 export type Exercise = {
   name: string;
   description: string;
-  type: string; // Ex: "Cardio", "Strength", etc.
-  images: string[]; // Array de URLs de imagens
+  category: string;
+  muscleGroup: string[];
+  images: string[];
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;

@@ -23,12 +23,13 @@ export class ExercisesController {
     const updatedAt = '';
     const deletedAt = '';
 
-    const { name, type, description, images } = body;
+    const { name, description, category, muscleGroup, images } = body;
 
     return this.exercisesService.createExercise({
       name,
-      type,
+      category,
       description,
+      muscleGroup,
       images,
       createdAt,
       updatedAt,
@@ -40,12 +41,13 @@ export class ExercisesController {
   @HttpCode(HttpStatus.OK)
   async getExercise(
     @Query('name') name?: string,
-    @Query('type') type?: string,
+    @Query('category') category?: string,
     @Query('deletedAt') deletedAt?: string,
     @Query('description') description?: string,
+    @Query('muscleGroup') muscleGroup?: string[],
   ): Promise<Exercise[]> {
     try {
-      const filters = { name, type, deletedAt, description };
+      const filters = { name, category, muscleGroup, deletedAt, description };
       return await this.exercisesService.getExercises(filters);
     } catch (error) {
       console.error('Erro ao buscar exercicios: ', error);
