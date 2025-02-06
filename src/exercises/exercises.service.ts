@@ -31,10 +31,25 @@ export class ExercisesService {
     );
 
     if (filters.category) {
-      query = query.where('category', '==', filters.category);
+      query = query
+        .orderBy('category')
+        .startAt(filters.category)
+        .endAt(filters.category + '\uf8ff'); // "\uf8ff" para capturar qualquer string após o prefixo
     }
+
     if (filters.muscleGroup) {
-      query = query.where('muscleGroup', '==', filters.muscleGroup);
+      query = query.where(
+        'muscleGroup',
+        'array-contains-any',
+        filters.muscleGroup,
+      );
+    }
+
+    if (filters.name) {
+      query = query
+        .orderBy('name')
+        .startAt(filters.name)
+        .endAt(filters.name + '\uf8ff'); // "\uf8ff" para capturar qualquer string após o prefixo
     }
 
     const snapshot = await query.get();
