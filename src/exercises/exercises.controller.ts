@@ -6,6 +6,7 @@ import {
   Controller,
   Get,
   Query,
+  Param,
 } from '@nestjs/common';
 import { Exercise } from './exercises.types';
 import { ExercisesService } from './exercises.service';
@@ -51,6 +52,17 @@ export class ExercisesController {
       return await this.exercisesService.getExercises(filters);
     } catch (error) {
       console.error('Erro ao buscar exercicios: ', error);
+      throw error;
+    }
+  }
+
+  @Get(':id')
+  @HttpCode(HttpStatus.OK)
+  async getExerciseById(@Param('id') id: string): Promise<Exercise> {
+    try {
+      return await this.exercisesService.getExerciseById(id);
+    } catch (error) {
+      console.error('Erro ao buscar usuário: ', error);
       throw error;
     }
   }

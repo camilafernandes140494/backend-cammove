@@ -60,4 +60,15 @@ export class ExercisesService {
     const snapshot = await query.get();
     return snapshot.docs.map((doc) => doc.data() as Exercise);
   }
+
+  async getExerciseById(id: string): Promise<Exercise> {
+    const userRef = this.firestore.collection('exercises').doc(id);
+    const userDoc = await userRef.get();
+    if (!userDoc.exists) {
+      // Verifica se o documento existe
+      throw new Error('Usuário não encontrado');
+    }
+    const userData = userDoc.data() as Exercise;
+    return { ...userData, id: userDoc.id };
+  }
 }
