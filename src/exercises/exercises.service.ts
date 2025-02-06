@@ -49,7 +49,7 @@ export class ExercisesService {
     if (filters.name) {
       const normalizedFilterName = normalizeString(filters.name); // Normaliza o filtro de nome
       query = query
-        .orderBy('normalizedName') // Certifique-se de que os documentos têm o campo 'normalizedName'
+        .orderBy('name') // Certifique-se de que os documentos têm o campo 'normalizedName'
         .startAt(normalizedFilterName)
         .endAt(normalizedFilterName + '\uf8ff'); // "\uf8ff" para capturar qualquer string após o prefixo
     }

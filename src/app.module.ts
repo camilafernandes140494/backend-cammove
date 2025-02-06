@@ -13,9 +13,10 @@ import { ExercisesController } from './exercises/exercises.controller';
 import { ExercisesService } from './exercises/exercises.service';
 import { WorkoutsController } from './workouts/workouts.controller';
 import { WorkoutsService } from './workouts/workouts.service';
+import { CommonModule } from './common/common.module';
 
 @Module({
-  imports: [],
+  imports: [CommonModule],
   controllers: [
     AuthController,
     UsersController,
