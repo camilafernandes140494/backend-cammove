@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Exercise } from './exercises.types';
 import admin from 'src/firebase/firebase.config';
-import { normalizeString } from 'src/common/common';
 
 @Injectable()
 export class ExercisesService {
@@ -47,13 +46,17 @@ export class ExercisesService {
     }
 
     if (filters.name) {
-      const normalizedFilterName = normalizeString(filters.name); // Normaliza o filtro de nome
-      query = query
-        .orderBy('name') // Certifique-se de que os documentos têm o campo 'normalizedName'
-        .startAt(normalizedFilterName)
-        .endAt(normalizedFilterName + '\uf8ff'); // "\uf8ff" para capturar qualquer string após o prefixo
-    }
+      // Normalização do filtro de nome
+      const normalizedFilterName = filters.name
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
 
+      query = query
+        .orderBy('name') // Certifique-se de que os documentos têm o campo 'name'
+        .startAt(normalizedFilterName)
+        .endAt(normalizedFilterName + '\uf8ff');
+    }
     const snapshot = await query.get();
     return snapshot.docs.map((doc) => doc.data() as Exercise);
   }
