@@ -9,7 +9,7 @@ export class SupabaseService {
   constructor() {
     this.supabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
+      process.env.SUPABASE_KEY.replace(/\\n/g, '\n'),
     );
   }
 
