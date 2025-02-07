@@ -24,7 +24,7 @@ export class UploadController {
       throw new HttpException('Nenhum arquivo enviado', HttpStatus.BAD_REQUEST);
     }
 
-    const bucketName = 'meu-bucket'; // Nome do bucket no Supabase
+    const bucketName = 'cammove'; // Nome do bucket no Supabase
     const filePath = `${folder}/${Date.now()}-${file.originalname}`; // Caminho do arquivo no bucket
 
     try {
