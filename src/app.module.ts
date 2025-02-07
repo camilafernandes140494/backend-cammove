@@ -13,6 +13,8 @@ import { ExercisesController } from './exercises/exercises.controller';
 import { ExercisesService } from './exercises/exercises.service';
 import { WorkoutsController } from './workouts/workouts.controller';
 import { WorkoutsService } from './workouts/workouts.service';
+import { SupabaseService } from './supabase/supabase.service';
+import { UploadController } from './supabase/supabase.controller';
 
 @Module({
   imports: [],
@@ -23,6 +25,7 @@ import { WorkoutsService } from './workouts/workouts.service';
     PhysicalAssessmentsController,
     ExercisesController,
     WorkoutsController,
+    UploadController,
   ],
   providers: [
     AuthService,
@@ -32,6 +35,7 @@ import { WorkoutsService } from './workouts/workouts.service';
     PhysicalAssessmentsService,
     ExercisesService,
     WorkoutsService,
+    SupabaseService,
   ],
 })
 export class AppModule {}
