@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { createClient } from '@supabase/supabase-js';
+import { HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
 export class SupabaseService {
@@ -12,20 +13,28 @@ export class SupabaseService {
     );
   }
 
-  // Criando um método público para acessar o Supabase Storage
+  // Método para fazer o upload do arquivo no Supabase Storage
   async uploadFile(
     bucket: string,
     filePath: string,
     fileBuffer: Buffer,
     contentType: string,
   ) {
-    return this.supabase.storage
+    const { data, error } = await this.supabase.storage
       .from(bucket)
       .upload(filePath, fileBuffer, { contentType });
+
+    if (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+    return data;
   }
 
+  // Método para obter a URL pública do arquivo no bucket
   async getPublicUrl(bucket: string, filePath: string) {
-    return this.supabase.storage.from(bucket).getPublicUrl(filePath).data
-      .publicUrl;
+    const { data } = await this.supabase.storage
+      .from(bucket)
+      .getPublicUrl(filePath);
+    return data.publicUrl;
   }
 }
