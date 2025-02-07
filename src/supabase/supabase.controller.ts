@@ -50,9 +50,8 @@ export class UploadController {
       return { url: publicUrl }; // Retorna a URL pública
     } catch (error) {
       throw new HttpException(
-        'Erro ao fazer upload do arquivo',
+        `Erro ao fazer upload do arquivo ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
-        error,
       );
     }
   }
