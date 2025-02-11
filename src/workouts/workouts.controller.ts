@@ -15,23 +15,25 @@ import { WorkoutsService } from './workouts.service';
 export class WorkoutsController {
   constructor(private readonly workoutsService: WorkoutsService) {}
 
-  @Post('relationships/:relationshipId')
+  @Post('professors/:teacherId/relationships/:relationshipId')
   @HttpCode(HttpStatus.CREATED)
   async createWorkout(
+    @Param('teacherId') teacherId: string,
     @Param('relationshipId') relationshipId: string,
     @Body() workoutData: WorkoutData,
   ) {
     const createdAt = new Date().toISOString();
     return this.workoutsService.createWorkout(
+      teacherId,
       relationshipId,
       workoutData,
       createdAt,
     );
   }
 
-  @Get('summary')
+  @Get('professors/:teacherId/workouts')
   @HttpCode(HttpStatus.OK)
-  async getWorkoutsSummary() {
-    return this.workoutsService.getWorkoutsSummary();
+  async getWorkoutsByProfessor(@Param('teacherId') professorId: string) {
+    return this.workoutsService.getWorkoutsByProfessor(professorId);
   }
 }
