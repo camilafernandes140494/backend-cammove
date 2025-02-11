@@ -15,7 +15,7 @@ import { WorkoutsService } from './workouts.service';
 export class WorkoutsController {
   constructor(private readonly workoutsService: WorkoutsService) {}
 
-  @Post('professors/:teacherId/relationships/:relationshipId')
+  @Post('teachers/:teacherId/relationships/:relationshipId')
   @HttpCode(HttpStatus.CREATED)
   async createWorkout(
     @Param('teacherId') teacherId: string,
@@ -31,7 +31,7 @@ export class WorkoutsController {
     );
   }
 
-  @Get('professors/:teacherId/workouts')
+  @Get('teachers/:teacherId/workouts')
   @HttpCode(HttpStatus.OK)
   async getWorkoutsByProfessor(@Param('teacherId') professorId: string) {
     return this.workoutsService.getWorkoutsByProfessor(professorId);
