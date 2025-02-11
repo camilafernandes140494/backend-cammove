@@ -46,17 +46,15 @@ export class ExercisesService {
     }
 
     if (filters.name) {
-      // Normalização do filtro de nome
-      const normalizedFilterName = filters.name
-        .toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '');
+      // Remover normalização para testar com a string exata
+      const filterName = filters.name.toLowerCase(); // Ou use o valor original sem transformação
 
       query = query
-        .orderBy('name') // Certifique-se de que os documentos têm o campo 'name'
-        .startAt(normalizedFilterName)
-        .endAt(normalizedFilterName + '\uf8ff');
+        .orderBy('name') // Certifique-se de que o campo 'name' está indexado
+        .startAt(filterName)
+        .endAt(filterName + '\uf8ff');
     }
+
     const snapshot = await query.get();
     return snapshot.docs.map((doc) => doc.data() as Exercise);
   }
