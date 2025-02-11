@@ -10,4 +10,6 @@ export type WorkoutData = {
   updatedAt: string;
   deletedAt: string;
   exercises: Exercise[];
+  type: string;
+  studentName: string;
 };
