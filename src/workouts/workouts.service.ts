@@ -10,18 +10,19 @@ export class WorkoutsService {
     createdAt: string,
   ): Promise<any> {
     try {
-      const assessmentRef = this.firestore
+      const workoutsCollectionRef = this.firestore
         .collection('workouts')
-        .doc(relationshipIdId);
-      await assessmentRef.set({
+        .doc(relationshipIdId)
+        .collection('workoutsData'); // Subcoleção de workouts
+      const newWorkoutRef = workoutsCollectionRef.doc(); // Gera um ID único para cada treino
+      await newWorkoutRef.set({
         ...workoutData,
-        // Timestamp de criação
         createdAt,
       });
 
       return {
-        message: 'Treino cadastrada com sucesso',
-        id: assessmentRef.id,
+        message: 'Treino cadastrado com sucesso',
+        id: newWorkoutRef.id,
       };
     } catch (error) {
       throw new Error('Erro ao cadastrar treino: ' + error.message);
@@ -30,43 +31,50 @@ export class WorkoutsService {
 
   async updateWorkout(
     relationshipIdId: string,
+    workoutId: string, // Agora é necessário passar o ID do treino
     workoutData: WorkoutData,
     updatedAt: string,
   ): Promise<any> {
     try {
-      const assessmentRef = this.firestore
+      const workoutRef = this.firestore
         .collection('workouts')
-        .doc(relationshipIdId);
+        .doc(relationshipIdId)
+        .collection('workoutsData')
+        .doc(workoutId); // Referência ao treino específico
 
-      // Atualiza apenas os campos fornecidos
-      await assessmentRef.update({
+      await workoutRef.update({
         ...workoutData,
         updatedAt,
       });
 
       return {
-        message: 'Treino atualizada com sucesso',
-        id: assessmentRef.id,
+        message: 'Treino atualizado com sucesso',
+        id: workoutRef.id,
       };
     } catch (error) {
       throw new Error('Erro ao atualizar treino: ' + error.message);
     }
   }
 
-  async deleteWorkout(relationshipIdId: string): Promise<any> {
+  async deleteWorkout(
+    relationshipIdId: string,
+    workoutId: string, // Agora é necessário passar o ID do treino
+  ): Promise<any> {
     try {
-      const assessmentRef = this.firestore
+      const workoutRef = this.firestore
         .collection('workouts')
-        .doc(relationshipIdId);
+        .doc(relationshipIdId)
+        .collection('workoutsData')
+        .doc(workoutId); // Referência ao treino específico
 
-      await assessmentRef.delete();
+      await workoutRef.delete();
 
       return {
-        message: 'Treino excluída com sucesso',
-        id: relationshipIdId,
+        message: 'Treino excluído com sucesso',
+        id: workoutId,
       };
     } catch (error) {
-      throw new Error('Erro ao excluir Treino: ' + error.message);
+      throw new Error('Erro ao excluir treino: ' + error.message);
     }
   }
 }
