@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Body,
+  Get,
 } from '@nestjs/common';
 import { RelationshipsService } from './relationships.service';
 
@@ -38,5 +39,10 @@ export class RelationshipsController {
       relationshipId,
       updateData,
     );
+  }
+
+  @Get(':teacherId/students')
+  async getStudentsOfTeacher(@Param('teacherId') teacherId: string) {
+    return this.assignUsersService.getStudentsOfTeacher(teacherId);
   }
 }

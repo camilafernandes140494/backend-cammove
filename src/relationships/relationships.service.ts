@@ -79,4 +79,39 @@ export class RelationshipsService {
       throw new Error('Erro ao atualizar vínculo: ' + error.message);
     }
   }
+
+  async getStudentsOfTeacher(teacherId: string): Promise<any> {
+    try {
+      // Busca os relacionamentos onde o professor é o teacherId
+      const relationshipsSnapshot = await this.firestore
+        .collection('relationships')
+        .where('teacherId', '==', teacherId)
+        .get();
+
+      if (relationshipsSnapshot.empty) {
+        return { students: [] };
+      }
+
+      // Lista de IDs de alunos
+      const studentIds = relationshipsSnapshot.docs.map(
+        (doc) => doc.data().studentId,
+      );
+
+      // Busca em massa os documentos dos estudantes
+      const studentsSnapshot = await this.firestore
+        .collection('users')
+        .where(admin.firestore.FieldPath.documentId(), 'in', studentIds)
+        .get();
+
+      // Mapeia os dados retornados
+      const students = studentsSnapshot.docs.map((doc) => ({
+        studentId: doc.id,
+        studentName: doc.data().name || 'Nome não disponível',
+      }));
+
+      return { students };
+    } catch (error) {
+      throw new Error('Erro ao buscar alunos: ' + error.message);
+    }
+  }
 }
