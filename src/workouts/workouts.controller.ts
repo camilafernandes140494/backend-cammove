@@ -31,7 +31,7 @@ export class WorkoutsController {
     );
   }
 
-  @Get('teachers/:teacherId/workouts')
+  @Get('teachers/:teacherId/summary')
   @HttpCode(HttpStatus.OK)
   async getWorkoutsByProfessor(@Param('teacherId') professorId: string) {
     return this.workoutsService.getWorkoutsByProfessor(professorId);
