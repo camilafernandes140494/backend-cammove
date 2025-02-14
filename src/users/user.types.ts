@@ -4,6 +4,7 @@ export type User = {
   id?: string;
   name: string;
   gender: string;
+  image: string;
   birthDate: string;
   permission: PermissionType;
   createdAt: string;

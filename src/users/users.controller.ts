@@ -48,12 +48,13 @@ export class UsersController {
     const updatedAt = '';
     const deletedAt = '';
 
-    const { name, gender, birthDate, permission } = body;
+    const { name, gender, birthDate, permission, image } = body;
 
     return this.usersService.createUser(id, {
       name,
       gender,
       birthDate,
+      image,
       permission,
       createdAt,
       updatedAt,
@@ -73,12 +74,13 @@ export class UsersController {
       const updatedAt = new Date().toISOString();
 
       // Certifique-se de não enviar campos undefined
-      const { name, gender, birthDate, permission } = body;
+      const { name, gender, birthDate, permission, image } = body;
       const updateData = {
         ...(name && { name }),
         ...(gender && { gender }),
         ...(birthDate && { birthDate }),
         ...(permission && { permission }),
+        ...(image && { image }),
         updatedAt,
       };
 
