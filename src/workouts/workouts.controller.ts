@@ -23,11 +23,17 @@ export class WorkoutsController {
     @Body() workoutData: WorkoutData,
   ) {
     const createdAt = new Date().toISOString();
+
+    const expireDate = new Date();
+    expireDate.setMonth(expireDate.getMonth() + 1);
+    const expireAt = expireDate.toISOString();
+
     return this.workoutsService.createWorkout(
       teacherId,
       relationshipId,
       workoutData,
       createdAt,
+      expireAt,
     );
   }
 

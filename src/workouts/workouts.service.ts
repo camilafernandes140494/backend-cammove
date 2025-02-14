@@ -9,6 +9,7 @@ export class WorkoutsService {
     relationshipId: string,
     workoutData: WorkoutData,
     createdAt: string,
+    expireAt: string,
   ): Promise<any> {
     try {
       // Criar o treino na subcoleção workoutsData dentro de workouts/{relationshipId}
@@ -34,6 +35,7 @@ export class WorkoutsService {
       await summaryRef.set({
         workoutId: newWorkoutRef.id,
         createdAt,
+        expireAt,
         workoutType: workoutData.type, // Tipo do treino
         studentName: workoutData.studentName, // Nome da pessoa para quem é o treino
       });
