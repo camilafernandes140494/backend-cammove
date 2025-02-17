@@ -15,7 +15,7 @@ export class RelationshipsController {
   constructor(private readonly assignUsersService: RelationshipsService) {}
 
   // Rota para salvar usuário no Firestore
-  @Post(':teacherId/:studentId')
+  @Post('teachers/:teacherId/students/:studentId')
   @HttpCode(HttpStatus.CREATED)
   async assignStudentToTeacher(
     @Param('teacherId') teacherId: string,
@@ -41,7 +41,7 @@ export class RelationshipsController {
     );
   }
 
-  @Get(':teacherId/students')
+  @Get('teachers/:teacherId/students')
   async getStudentsOfTeacher(@Param('teacherId') teacherId: string) {
     return this.assignUsersService.getStudentsOfTeacher(teacherId);
   }
