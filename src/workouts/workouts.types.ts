@@ -12,4 +12,5 @@ export type WorkoutData = {
   exercises: Exercise[];
   type: string;
   studentName: string;
+  studentId: string;
 };

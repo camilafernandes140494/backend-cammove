@@ -37,7 +37,8 @@ export class WorkoutsService {
         createdAt,
         expireAt,
         workoutType: workoutData.type, // Tipo do treino
-        studentName: workoutData.studentName, // Nome da pessoa para quem é o treino
+        studentName: workoutData.studentName,
+        studentId: workoutData.studentId, // Nome da pessoa para quem é o treino
       });
 
       return {
