@@ -90,7 +90,7 @@ export class WorkoutsService {
       //   ...doc.data(),
       // }));
 
-      return snapshot.docs;
+      return snapshot.docs.map((doc) => doc.id);
     } catch (error) {
       throw new Error('Erro ao buscar treinos: ' + error.message);
     }
