@@ -72,4 +72,50 @@ export class WorkoutsService {
       throw new Error('Erro ao buscar treinos do professor: ' + error.message);
     }
   }
+
+  async getWorkoutsByStudentId(studentsId: string): Promise<any> {
+    try {
+      const snapshot = await this.firestore
+        .collection('workouts')
+        .doc(studentsId)
+        .collection('workoutsData')
+        .get();
+
+      if (snapshot.empty) {
+        return { message: 'Nenhum treino encontrado.' };
+      }
+
+      const workouts = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return workouts;
+    } catch (error) {
+      throw new Error('Erro ao buscar treinos: ' + error.message);
+    }
+  }
+
+  async getWorkoutByStudentIdAndWorkoutId(
+    workoutsId: string,
+    studentsId: string,
+  ): Promise<any> {
+    try {
+      const snapshot = await this.firestore
+        .collection('workouts')
+        .doc(studentsId)
+        .collection('workoutsData')
+        .doc(workoutsId)
+        .get();
+
+      if (!snapshot.exists) {
+        // Verifica se o documento existe
+        throw new Error('Treino não encontrado');
+      }
+      const workoutData = snapshot.data();
+      return { ...workoutData, id: snapshot.id };
+    } catch (error) {
+      throw new Error('Erro ao buscar treinos: ' + error.message);
+    }
+  }
 }

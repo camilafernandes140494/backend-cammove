@@ -42,4 +42,22 @@ export class WorkoutsController {
   async getWorkoutsByProfessor(@Param('teacherId') professorId: string) {
     return this.workoutsService.getWorkoutsByProfessor(professorId);
   }
+
+  @Get('students/:studentsId')
+  @HttpCode(HttpStatus.OK)
+  async getWorkoutsByStudentId(@Param('studentId') studentsId: string) {
+    return this.workoutsService.getWorkoutsByStudentId(studentsId);
+  }
+
+  @Get(':workoutsId/students/:studentsId')
+  @HttpCode(HttpStatus.OK)
+  async getWorkoutByStudentIdAndWorkoutId(
+    @Param('workoutsId') workoutsId: string,
+    @Param('studentsId') studentsId: string,
+  ) {
+    return this.workoutsService.getWorkoutByStudentIdAndWorkoutId(
+      workoutsId,
+      studentsId,
+    );
+  }
 }
