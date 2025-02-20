@@ -85,12 +85,12 @@ export class WorkoutsService {
         return { message: 'Nenhum treino encontrado.' };
       }
 
-      const workouts = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+      // const workouts = snapshot.docs.map((doc) => ({
+      //   id: doc.id,
+      //   ...doc.data(),
+      // }));
 
-      return workouts;
+      return snapshot;
     } catch (error) {
       throw new Error('Erro ao buscar treinos: ' + error.message);
     }
