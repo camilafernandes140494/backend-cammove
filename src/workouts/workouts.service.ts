@@ -6,7 +6,7 @@ export class WorkoutsService {
 
   async createWorkout(
     teacherId: string, // Agora o ID do professor é obrigatório
-    relationshipId: string,
+    studentId: string,
     workoutData: WorkoutData,
     createdAt: string,
     expireAt: string,
@@ -15,7 +15,7 @@ export class WorkoutsService {
       // Criar o treino na subcoleção workoutsData dentro de workouts/{relationshipId}
       const workoutsCollectionRef = this.firestore
         .collection('workouts')
-        .doc(relationshipId)
+        .doc(studentId)
         .collection('workoutsData');
 
       const newWorkoutRef = workoutsCollectionRef.doc();
