@@ -90,7 +90,7 @@ export class WorkoutsService {
       //   ...doc.data(),
       // }));
 
-      return snapshot;
+      return snapshot.docs;
     } catch (error) {
       throw new Error('Erro ao buscar treinos: ' + error.message);
     }
