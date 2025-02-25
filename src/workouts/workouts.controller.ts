@@ -6,6 +6,7 @@ import {
   Param,
   Body,
   Get,
+  Delete,
 } from '@nestjs/common';
 
 import { WorkoutData } from './workouts.types';
@@ -59,5 +60,15 @@ export class WorkoutsController {
       workoutsId,
       studentsId,
     );
+  }
+
+  @Delete(':workoutId/students/:studentId/teacher/:teacherId')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteWorkout(
+    @Param('workoutId') workoutId: string,
+    @Param('studentId') studentId: string,
+    @Param('teacherId') teacherId: string,
+  ) {
+    await this.workoutsService.deleteWorkout(teacherId, studentId, workoutId);
   }
 }

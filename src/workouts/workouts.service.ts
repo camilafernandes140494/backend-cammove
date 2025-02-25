@@ -118,4 +118,33 @@ export class WorkoutsService {
       throw new Error('Erro ao buscar treinos: ' + error.message);
     }
   }
+
+  async deleteWorkout(
+    teacherId: string,
+    studentId: string,
+    workoutId: string,
+  ): Promise<any> {
+    try {
+      // Referência para o treino na subcoleção workoutsData
+      const workoutRef = this.firestore
+        .collection('workouts')
+        .doc(studentId)
+        .collection('workoutsData')
+        .doc(workoutId);
+
+      // Referência para o resumo do treino dentro de workoutsSummary
+      const summaryRef = this.firestore
+        .collection('workoutsSummary')
+        .doc(teacherId)
+        .collection('workouts')
+        .doc(workoutId);
+
+      // Deletar os dois documentos simultaneamente
+      await Promise.all([workoutRef.delete(), summaryRef.delete()]);
+
+      return { message: 'Treino deletado com sucesso', id: workoutId };
+    } catch (error) {
+      throw new Error('Erro ao deletar treino: ' + error.message);
+    }
+  }
 }
