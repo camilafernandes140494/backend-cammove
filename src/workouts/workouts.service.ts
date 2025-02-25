@@ -211,4 +211,36 @@ export class WorkoutsService {
       throw new Error('Erro ao duplicar treino: ' + error.message);
     }
   }
+
+  async updateWorkout(
+    teacherId: string,
+    studentId: string,
+    workoutId: string,
+    updateData: Partial<WorkoutData>,
+  ): Promise<any> {
+    try {
+      const workoutRef = this.firestore
+        .collection('workouts')
+        .doc(studentId)
+        .collection('workoutsData')
+        .doc(workoutId);
+
+      // Atualizar os dados do treino
+      await workoutRef.update(updateData);
+
+      // Atualizar também o resumo do treino
+      const summaryRef = this.firestore
+        .collection('workoutsSummary')
+        .doc(teacherId)
+        .collection('workouts')
+        .doc(workoutId);
+
+      // Atualiza apenas os campos enviados no `updateData`
+      await summaryRef.update(updateData);
+
+      return { message: 'Treino atualizado com sucesso', id: workoutId };
+    } catch (error) {
+      throw new Error('Erro ao atualizar treino: ' + error.message);
+    }
+  }
 }

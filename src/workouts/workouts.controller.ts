@@ -7,6 +7,7 @@ import {
   Body,
   Get,
   Delete,
+  Patch,
 } from '@nestjs/common';
 
 import { WorkoutData } from './workouts.types';
@@ -83,6 +84,22 @@ export class WorkoutsController {
       teacherId,
       studentId,
       workoutId,
+    );
+  }
+
+  @Patch(':workoutId/students/:studentId/teacher/:teacherId')
+  @HttpCode(HttpStatus.OK)
+  async updateWorkout(
+    @Param('workoutId') workoutId: string,
+    @Param('studentId') studentId: string,
+    @Param('teacherId') teacherId: string,
+    @Body() updateData: Partial<WorkoutData>, // Permite atualizar campos específicos
+  ) {
+    return this.workoutsService.updateWorkout(
+      teacherId,
+      studentId,
+      workoutId,
+      updateData,
     );
   }
 }
