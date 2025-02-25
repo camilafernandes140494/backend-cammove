@@ -147,4 +147,68 @@ export class WorkoutsService {
       throw new Error('Erro ao deletar treino: ' + error.message);
     }
   }
+
+  async duplicateWorkout(
+    teacherId: string,
+    studentId: string,
+    workoutId: string,
+  ): Promise<any> {
+    try {
+      // Buscar o treino original
+      const originalWorkoutRef = this.firestore
+        .collection('workouts')
+        .doc(studentId)
+        .collection('workoutsData')
+        .doc(workoutId);
+
+      const originalWorkoutSnap = await originalWorkoutRef.get();
+
+      if (!originalWorkoutSnap.exists) {
+        throw new Error('Treino original não encontrado.');
+      }
+
+      const originalWorkoutData = originalWorkoutSnap.data();
+
+      // Criar novas datas
+      const createdAt = new Date().toISOString();
+      const expireDate = new Date();
+      expireDate.setMonth(expireDate.getMonth() + 1);
+      const expireAt = expireDate.toISOString();
+
+      // Criar novo treino com ID único
+      const newWorkoutRef = this.firestore
+        .collection('workouts')
+        .doc(studentId)
+        .collection('workoutsData')
+        .doc();
+
+      await newWorkoutRef.set({
+        ...originalWorkoutData,
+        createdAt,
+      });
+
+      // Criar novo resumo do treino
+      const summaryRef = this.firestore
+        .collection('workoutsSummary')
+        .doc(teacherId)
+        .collection('workouts')
+        .doc(newWorkoutRef.id);
+
+      await summaryRef.set({
+        workoutId: newWorkoutRef.id,
+        createdAt,
+        expireAt,
+        workoutType: originalWorkoutData.type,
+        studentName: originalWorkoutData.studentName,
+        studentId: originalWorkoutData.studentId,
+      });
+
+      return {
+        message: 'Treino duplicado com sucesso',
+        id: newWorkoutRef.id,
+      };
+    } catch (error) {
+      throw new Error('Erro ao duplicar treino: ' + error.message);
+    }
+  }
 }

@@ -71,4 +71,18 @@ export class WorkoutsController {
   ) {
     await this.workoutsService.deleteWorkout(teacherId, studentId, workoutId);
   }
+
+  @Post(':workoutId/students/:studentId/teachers/:teacherId/duplicate')
+  @HttpCode(HttpStatus.CREATED)
+  async duplicateWorkout(
+    @Param('workoutId') workoutId: string,
+    @Param('studentId') studentId: string,
+    @Param('teacherId') teacherId: string,
+  ) {
+    return this.workoutsService.duplicateWorkout(
+      teacherId,
+      studentId,
+      workoutId,
+    );
+  }
 }
