@@ -7,6 +7,7 @@ import {
   Get,
   Query,
   Param,
+  Delete,
 } from '@nestjs/common';
 import { Exercise } from './exercises.types';
 import { ExercisesService } from './exercises.service';
@@ -63,6 +64,17 @@ export class ExercisesController {
       return await this.exercisesService.getExerciseById(id);
     } catch (error) {
       console.error('Erro ao buscar usuário: ', error);
+      throw error;
+    }
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async deleteExercise(@Param('id') id: string): Promise<Exercise> {
+    try {
+      return await this.exercisesService.deleteExercise(id);
+    } catch (error) {
+      console.error('Erro ao deletar usuário: ', error);
       throw error;
     }
   }

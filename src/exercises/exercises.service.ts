@@ -69,4 +69,15 @@ export class ExercisesService {
     const userData = userDoc.data() as Exercise;
     return { ...userData, id: userDoc.id };
   }
+
+  async deleteExercise(id: string): Promise<any> {
+    try {
+      const workoutRef = this.firestore.collection('exercises').doc(id);
+      await workoutRef.delete();
+
+      return { message: 'Exercício deletado com sucesso', id: id };
+    } catch (error) {
+      throw new Error('Erro ao deletar treino: ' + error.message);
+    }
+  }
 }
