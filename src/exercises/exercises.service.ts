@@ -80,4 +80,24 @@ export class ExercisesService {
       throw new Error('Erro ao deletar treino: ' + error.message);
     }
   }
+
+  async updateExercise(
+    id: string,
+    updateData: Partial<Exercise>,
+  ): Promise<any> {
+    try {
+      const exerciseRef = this.firestore.collection('exercises').doc(id);
+
+      await exerciseRef.update({
+        ...updateData,
+        id: id,
+        updatedAt: new Date().toISOString(),
+        deletedAt: '',
+      });
+
+      return { message: 'Exercício atualizado com sucesso', id: id };
+    } catch (error) {
+      throw new Error('Erro ao atualizar treino: ' + error.message);
+    }
+  }
 }

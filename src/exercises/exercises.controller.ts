@@ -8,6 +8,7 @@ import {
   Query,
   Param,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { Exercise } from './exercises.types';
 import { ExercisesService } from './exercises.service';
@@ -77,5 +78,14 @@ export class ExercisesController {
       console.error('Erro ao deletar usuário: ', error);
       throw error;
     }
+  }
+
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  async updateWorkout(
+    @Param('id') id: string,
+    @Body() updateData: Partial<Exercise>, // Permite atualizar campos específicos
+  ) {
+    return this.exercisesService.updateExercise(id, updateData);
   }
 }
