@@ -19,10 +19,10 @@ export class EmailService {
   async sendEmail(body: BodyEmail) {
     const mailOptions = {
       from: 'app.cammove@gmail.com',
-      to: body.attachments,
+      to: body.to, // Destinatários (não attachments)
       subject: body.subject,
       html: body.body,
-      attachments: body.attachments,
+      attachments: body.attachments, // Apenas para anexos
     };
 
     try {
