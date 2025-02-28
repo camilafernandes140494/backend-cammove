@@ -1,5 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { EmailService } from './email.service';
+import { BodyEmail } from './email.types';
 
 @Controller('email')
 export class EmailController {
@@ -7,8 +8,9 @@ export class EmailController {
 
   @Post('send')
   async sendEmail(
-    @Body() { to, subject, body, attachments }: { to: string[], subject: string, body: string, attachments?: any[] }
+    @Body()
+    body: BodyEmail,
   ) {
-    return this.emailService.sendEmail(to, subject, body, attachments);
+    return this.emailService.sendEmail(body);
   }
 }

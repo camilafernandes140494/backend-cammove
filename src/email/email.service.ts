@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
+import { BodyEmail } from './email.types';
 
 @Injectable()
 export class EmailService {
@@ -15,13 +16,13 @@ export class EmailService {
     });
   }
 
-  async sendEmail(to: string[], subject: string, body: string, attachments?: any[]) {
+  async sendEmail(body: BodyEmail) {
     const mailOptions = {
-      from: 'your-email@gmail.com',
-      to,
-      subject,
-      html: body,
-      attachments,
+      from: 'app.cammove@gmail.com',
+      to: body.attachments,
+      subject: body.subject,
+      html: body.body,
+      attachments: body.attachments,
     };
 
     try {
