@@ -11,7 +11,7 @@ export class EmailService {
       service: 'gmail', // ou outro serviço de e-mail como SendGrid, Mailgun
       auth: {
         user: 'app.cammove@gmail.com',
-        pass: process.env.EMAIL!,
+        pass: 'Chiclete140494*',
       },
     });
   }
