@@ -8,7 +8,9 @@ export class EmailService {
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      service: 'gmail', // ou outro serviço de e-mail como SendGrid, Mailgun
+      host: 'smtp.gmail.com',
+      port: 465, // ou 587
+      secure: true,
       auth: {
         user: 'app.cammove@gmail.com',
         pass: 'Chiclete140494*',
