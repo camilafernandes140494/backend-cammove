@@ -112,4 +112,75 @@ export class PhysicalAssessmentsService {
       throw new Error('Erro ao excluir avaliação física: ' + error.message);
     }
   }
+
+  async getAssessmentsByProfessor(teacherId: string): Promise<any> {
+    try {
+      const snapshot = await this.firestore
+        .collection('assessmentsSummary')
+        .doc(teacherId)
+        .collection('assessments')
+        .get();
+
+      if (snapshot.empty) {
+        return { message: 'Nenhuma avaliação encontrada para este professor.' };
+      }
+
+      const assessments = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return assessments;
+    } catch (error) {
+      throw new Error(
+        'Erro ao buscar avaliações do professor: ' + error.message,
+      );
+    }
+  }
+
+  async getAssessmentsByStudentId(studentsId: string): Promise<any> {
+    try {
+      const snapshot = await this.firestore
+        .collection('assessments')
+        .doc(studentsId)
+        .collection('assessmentsData')
+        .get();
+
+      if (snapshot.empty) {
+        return { message: 'Nenhuma avaliação encontrada.' };
+      }
+
+      // const workouts = snapshot.docs.map((doc) => ({
+      //   id: doc.id,
+      //   ...doc.data(),
+      // }));
+
+      return snapshot.docs.map((doc) => doc.id);
+    } catch (error) {
+      throw new Error('Erro ao buscar avaliações: ' + error.message);
+    }
+  }
+
+  async getAssessmentsByStudentIdAndAssessmentsId(
+    assessmentsId: string,
+    studentsId: string,
+  ): Promise<any> {
+    try {
+      const snapshot = await this.firestore
+        .collection('assessments')
+        .doc(studentsId)
+        .collection('assessmentsData')
+        .doc(assessmentsId)
+        .get();
+
+      if (!snapshot.exists) {
+        // Verifica se o documento existe
+        throw new Error('Treino não encontrado');
+      }
+      const assessmentsData = snapshot.data();
+      return { ...assessmentsData, id: snapshot.id };
+    } catch (error) {
+      throw new Error('Erro ao buscar avaliações: ' + error.message);
+    }
+  }
 }

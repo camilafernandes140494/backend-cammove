@@ -7,6 +7,7 @@ import {
   Body,
   Patch,
   Delete,
+  Get,
 } from '@nestjs/common';
 import { PhysicalAssessmentsService } from './physicalAssessments.service';
 import { PhysicalAssessmentData } from './physicalAssessments.types';
@@ -67,6 +68,34 @@ export class PhysicalAssessmentsController {
       teacherId,
       studentId,
       assessmentsId,
+    );
+  }
+
+  @Get('teachers/:teacherId/summary')
+  @HttpCode(HttpStatus.OK)
+  async getAssessmentByProfessor(@Param('teacherId') professorId: string) {
+    return this.physicalAssessmentsService.getAssessmentsByProfessor(
+      professorId,
+    );
+  }
+
+  @Get('students/:studentsId')
+  @HttpCode(HttpStatus.OK)
+  async getAssessmentByStudentId(@Param('studentsId') studentsId: string) {
+    return this.physicalAssessmentsService.getAssessmentsByStudentId(
+      studentsId,
+    );
+  }
+
+  @Get(':assessmentsId/students/:studentsId')
+  @HttpCode(HttpStatus.OK)
+  async getAssessmentByStudentIdAndWorkoutId(
+    @Param('assessmentsId') assessmentsId: string,
+    @Param('studentsId') studentsId: string,
+  ) {
+    return this.physicalAssessmentsService.getAssessmentsByStudentIdAndAssessmentsId(
+      assessmentsId,
+      studentsId,
     );
   }
 }
