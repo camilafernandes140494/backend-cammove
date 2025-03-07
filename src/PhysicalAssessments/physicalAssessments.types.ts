@@ -50,6 +50,9 @@ type MedicalHistory = {
 
 export type PhysicalAssessmentData = {
   // Medições Corporais
+  studentName: string;
+  studentId: string;
+
   bodyMeasurements: BodyMeasurements;
 
   // Massa Corporal

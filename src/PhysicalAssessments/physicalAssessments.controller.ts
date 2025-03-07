@@ -17,52 +17,56 @@ export class PhysicalAssessmentsController {
   ) {}
 
   // Endpoint para cadastrar avaliação física
-  @Post('relationships/:relationshipId')
+  @Post('teachers/:teacherId/students/:studentId')
   @HttpCode(HttpStatus.CREATED)
   async createPhysicalAssessment(
-    @Param('relationshipId') relationshipIdId: string,
+    @Param('teacherId') teacherId: string,
+    @Param('studentId') studentId: string,
     @Body()
     assessmentData: PhysicalAssessmentData,
   ) {
     const createdAt = new Date().toISOString();
+
+    const expireDate = new Date();
+    expireDate.setMonth(expireDate.getMonth() + 1);
+    const expireAt = expireDate.toISOString();
+
     return this.physicalAssessmentsService.createPhysicalAssessment(
-      relationshipIdId,
+      teacherId,
+      studentId,
       assessmentData,
       createdAt,
+      expireAt,
     );
   }
 
-  // Endpoint para atualizar avaliação física
-  @Patch('relationships/:relationshipId')
+  @Patch(':assessmentsId/students/:studentId/teacher/:teacherId')
   @HttpCode(HttpStatus.OK)
-  async updatePhysicalAssessment(
-    @Param('relationshipId') relationshipIdId: string,
-    @Body() assessmentData: PhysicalAssessmentData,
+  async updateAssessments(
+    @Param('assessmentsId') assessmentsId: string,
+    @Param('studentId') studentId: string,
+    @Param('teacherId') teacherId: string,
+    @Body() updateData: Partial<PhysicalAssessmentData>, // Permite atualizar campos específicos
   ) {
-    const updatedAt = new Date().toISOString();
-    try {
-      return await this.physicalAssessmentsService.updatePhysicalAssessment(
-        relationshipIdId,
-        assessmentData,
-        updatedAt,
-      );
-    } catch (error) {
-      throw new Error('Erro ao atualizar avaliação física: ' + error.message);
-    }
+    return this.physicalAssessmentsService.updatePhysicalAssessment(
+      teacherId,
+      studentId,
+      assessmentsId,
+      updateData,
+    );
   }
 
-  // Endpoint para excluir avaliação física
-  @Delete('relationships/:relationshipId')
+  @Delete(':assessmentsId/students/:studentId/teacher/:teacherId')
   @HttpCode(HttpStatus.NO_CONTENT)
   async deletePhysicalAssessment(
-    @Param('relationshipId') relationshipIdId: string,
+    @Param('assessmentsId') assessmentsId: string,
+    @Param('studentId') studentId: string,
+    @Param('teacherId') teacherId: string,
   ) {
-    try {
-      return await this.physicalAssessmentsService.deletePhysicalAssessment(
-        relationshipIdId,
-      );
-    } catch (error) {
-      throw new Error('Erro ao excluir avaliação física: ' + error.message);
-    }
+    await this.physicalAssessmentsService.deletePhysicalAssessment(
+      teacherId,
+      studentId,
+      assessmentsId,
+    );
   }
 }
