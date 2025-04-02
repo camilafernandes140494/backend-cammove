@@ -48,13 +48,14 @@ export class UsersController {
     const updatedAt = '';
     const deletedAt = '';
 
-    const { name, gender, birthDate, permission, image } = body;
+    const { name, gender, birthDate, permission, image, email } = body;
 
     return this.usersService.createUser(id, {
       name,
       gender,
       birthDate,
       image,
+      email
       permission,
       createdAt,
       updatedAt,
@@ -123,12 +124,13 @@ export class UsersController {
   @HttpCode(HttpStatus.OK)
   async getUsers(
     @Query('name') name?: string,
+    @Query('email') email?: string,
     @Query('gender') gender?: string,
     @Query('deletedAt') deletedAt?: string,
     @Query('permission') permission?: PermissionType,
   ): Promise<User[]> {
     try {
-      const filters = { name, gender, deletedAt, permission };
+      const filters = { name, gender, deletedAt, permission, email };
       return await this.usersService.getUsers(filters);
     } catch (error) {
       console.error('Erro ao buscar usuários: ', error);

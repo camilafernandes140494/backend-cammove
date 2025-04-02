@@ -124,6 +124,13 @@ export class UsersService {
     if (filters.permission) {
       query = query.where('permission', '==', filters.permission);
     }
+    if (filters.email) {
+      query = query
+        .orderBy('email')
+        .startAt(filters.email)
+        .endAt(filters.email + '\uf8ff');
+    }
+
     const snapshot = await query.get();
     if (snapshot.empty) {
       return [];

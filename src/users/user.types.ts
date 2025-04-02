@@ -10,6 +10,7 @@ export type User = {
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
+  email: string;
 };
 
 export type UpdateUser = Partial<User>;
