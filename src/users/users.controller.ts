@@ -55,7 +55,7 @@ export class UsersController {
       gender,
       birthDate,
       image,
-      email
+      email,
       permission,
       createdAt,
       updatedAt,
