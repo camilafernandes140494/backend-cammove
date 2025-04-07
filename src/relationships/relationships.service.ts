@@ -35,6 +35,7 @@ export class RelationshipsService {
         studentId,
         createdAt,
         status: 'ACTIVE',
+        id: relationshipRef.id,
       });
 
       return { message: 'Vínculo criado com sucesso', id: relationshipRef.id };
