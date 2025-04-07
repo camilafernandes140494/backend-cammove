@@ -65,6 +65,7 @@ export class RelationshipsService {
       }
 
       // Adicione aqui qualquer outra lógica para atualizar outros campos, se necessário
+      dataToUpdate.updatedAt = new Date().toISOString();
 
       if (Object.keys(dataToUpdate).length === 0) {
         throw new Error('Nenhum dado válido para atualizar');
