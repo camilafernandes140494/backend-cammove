@@ -11,6 +11,7 @@ export type User = {
   updatedAt: string;
   deletedAt: string;
   email: string;
+  status: 'ACTIVE' | 'INACTIVE' | null;
 };
 
 export type UpdateUser = Partial<User>;

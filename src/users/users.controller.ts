@@ -48,7 +48,15 @@ export class UsersController {
     const updatedAt = '';
     const deletedAt = '';
 
-    const { name, gender, birthDate, permission, image, email } = body;
+    const {
+      name,
+      gender,
+      birthDate,
+      permission,
+      image,
+      email,
+      status = 'ACTIVE',
+    } = body;
 
     return this.usersService.createUser(id, {
       name,
@@ -60,6 +68,7 @@ export class UsersController {
       createdAt,
       updatedAt,
       deletedAt,
+      status,
     });
   }
 
