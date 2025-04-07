@@ -114,4 +114,27 @@ export class RelationshipsService {
       throw new Error('Erro ao buscar alunos: ' + error.message);
     }
   }
+
+  async getStatusRelationships(
+    teacherId: string,
+    studentId: string,
+  ): Promise<any> {
+    try {
+      // Busca os relacionamentos onde o professor é o teacherId
+      const relationshipsSnapshot = await this.firestore
+        .collection('relationships')
+        .where('teacherId', '==', teacherId)
+        .where('studentId', '==', studentId)
+        .limit(1)
+        .get();
+
+      if (relationshipsSnapshot.empty) {
+        return null;
+      }
+
+      return relationshipsSnapshot.docs[0].data();
+    } catch (error) {
+      throw new Error('Erro ao buscar alunos: ' + error.message);
+    }
+  }
 }
