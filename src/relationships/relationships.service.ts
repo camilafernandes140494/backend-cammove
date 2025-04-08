@@ -84,7 +84,7 @@ export class RelationshipsService {
 
   async getStudentsOfTeacher(
     teacherId: string,
-    filters: { status?: string | null },
+    status?: string | null,
   ): Promise<any> {
     try {
       // Busca os relacionamentos onde o professor é o teacherId
@@ -116,9 +116,9 @@ export class RelationshipsService {
       }));
 
       // Aplica o filtro por status se for uma string válida
-      if (filters.status && typeof filters.status === 'string') {
+      if (status && typeof status === 'string') {
         students = students.filter(
-          (student) => student.studentStatus === filters.status,
+          (student) => student.studentStatus === status,
         );
       }
 
