@@ -82,10 +82,7 @@ export class RelationshipsService {
     }
   }
 
-  async getStudentsOfTeacher(
-    teacherId: string,
-    status?: string | null,
-  ): Promise<any> {
+  async getStudentsOfTeacher(teacherId: string, status?: string): Promise<any> {
     try {
       // Busca os relacionamentos onde o professor é o teacherId
       const relationshipsSnapshot = await this.firestore
@@ -116,7 +113,7 @@ export class RelationshipsService {
       }));
 
       // Aplica o filtro por status se for uma string válida
-      if (status && typeof status === 'string') {
+      if (status) {
         students = students.filter(
           (student) => student.studentStatus === status,
         );
