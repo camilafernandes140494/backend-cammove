@@ -109,6 +109,7 @@ export class RelationshipsService {
       const students = studentsSnapshot.docs.map((doc) => ({
         studentId: doc.id,
         studentName: doc.data().name || 'Nome não disponível',
+        studentStatus: doc.data().status || 'INACTIVE',
       }));
 
       return { students };
