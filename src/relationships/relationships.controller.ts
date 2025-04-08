@@ -7,6 +7,7 @@ import {
   Patch,
   Body,
   Get,
+  Query,
 } from '@nestjs/common';
 import { RelationshipsService } from './relationships.service';
 
@@ -44,7 +45,7 @@ export class RelationshipsController {
   @Get('teachers/:teacherId/students')
   async getStudentsOfTeacher(
     @Param('teacherId') teacherId: string,
-    @Param('status') status: string | null,
+    @Query('status') status: string | null,
   ) {
     return this.assignUsersService.getStudentsOfTeacher(teacherId, status);
   }
