@@ -82,7 +82,10 @@ export class RelationshipsService {
     }
   }
 
-  async getStudentsOfTeacher(teacherId: string): Promise<any> {
+  async getStudentsOfTeacher(
+    teacherId: string,
+    filters: { status?: string | null },
+  ): Promise<any> {
     try {
       // Busca os relacionamentos onde o professor é o teacherId
       const relationshipsSnapshot = await this.firestore
@@ -99,18 +102,25 @@ export class RelationshipsService {
         (doc) => doc.data().studentId,
       );
 
-      // Busca em massa os documentos dos estudantes
+      // Busca os documentos dos estudantes
       const studentsSnapshot = await this.firestore
         .collection('users')
         .where(admin.firestore.FieldPath.documentId(), 'in', studentIds)
         .get();
 
       // Mapeia os dados retornados
-      const students = studentsSnapshot.docs.map((doc) => ({
+      let students = studentsSnapshot.docs.map((doc) => ({
         studentId: doc.id,
         studentName: doc.data().name || 'Nome não disponível',
         studentStatus: doc.data().status || 'INACTIVE',
       }));
+
+      // Aplica o filtro por status se for uma string válida
+      if (filters.status && typeof filters.status === 'string') {
+        students = students.filter(
+          (student) => student.studentStatus === filters.status,
+        );
+      }
 
       return { students };
     } catch (error) {
