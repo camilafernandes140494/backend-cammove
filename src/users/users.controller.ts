@@ -84,13 +84,15 @@ export class UsersController {
       const updatedAt = new Date().toISOString();
 
       // Certifique-se de não enviar campos undefined
-      const { name, gender, birthDate, permission, image } = body;
+      const { name, gender, birthDate, permission, image, status } = body;
       const updateData = {
         ...(name && { name }),
         ...(gender && { gender }),
         ...(birthDate && { birthDate }),
         ...(permission && { permission }),
         ...(image && { image }),
+        ...(status && { status }),
+
         updatedAt,
       };
 
