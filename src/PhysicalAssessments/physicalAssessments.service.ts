@@ -150,12 +150,13 @@ export class PhysicalAssessmentsService {
         return { message: 'Nenhuma avaliação encontrada.' };
       }
 
-      // const workouts = snapshot.docs.map((doc) => ({
-      //   id: doc.id,
-      //   ...doc.data(),
-      // }));
-
-      return snapshot.docs.map((doc) => doc.id);
+      return snapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          createdAt: data.createdAt,
+        };
+      });
     } catch (error) {
       throw new Error('Erro ao buscar avaliações: ' + error.message);
     }
