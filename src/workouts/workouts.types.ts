@@ -15,4 +15,5 @@ export type WorkoutData = {
   type: string;
   studentName: string;
   studentId: string;
+  nameWorkout: string;
 };

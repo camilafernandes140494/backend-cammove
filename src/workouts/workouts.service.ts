@@ -38,7 +38,8 @@ export class WorkoutsService {
         expireAt,
         workoutType: workoutData.type, // Tipo do treino
         studentName: workoutData.studentName,
-        studentId: workoutData.studentId, // Nome da pessoa para quem é o treino
+        studentId: workoutData.studentId,
+        nameWorkout: workoutData.nameWorkout,
       });
 
       return {
@@ -91,6 +92,7 @@ export class WorkoutsService {
           id: doc.id,
           createdAt: data.createdAt,
           type: data.type,
+          nameWorkout: data.nameWorkout,
         };
       });
     } catch (error) {
