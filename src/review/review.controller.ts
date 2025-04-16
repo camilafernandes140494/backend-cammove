@@ -35,7 +35,7 @@ export class ReviewController {
   }
 
   // Endpoint para obter review por professor, workout e aluno
-  @Get('teachers/:teacherId/workouts/:workoutId/students/:studentId')
+  @Get('teachers/:teacherId/students/:studentId/workouts/:workoutId')
   @HttpCode(HttpStatus.OK)
   async getReviewByWorkoutAndStudent(
     @Param('teacherId') teacherId: string,
@@ -57,7 +57,7 @@ export class ReviewController {
   }
 
   // Endpoint para deletar um review
-  @Delete('teachers/:teacherId/workouts/:workoutId/students/:studentId')
+  @Delete('teachers/:teacherId/students/:studentId/workouts/:workoutId')
   @HttpCode(HttpStatus.OK)
   async deleteReview(
     @Param('teacherId') teacherId: string,
@@ -68,7 +68,7 @@ export class ReviewController {
   }
 
   // Endpoint para atualizar um review
-  @Patch('teachers/:teacherId/workouts/:workoutId/students/:studentId')
+  @Patch('teachers/:teacherId/students/:studentId/workouts/:workoutId')
   @HttpCode(HttpStatus.OK)
   async updateReview(
     @Param('teacherId') teacherId: string,
