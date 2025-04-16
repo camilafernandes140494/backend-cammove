@@ -19,17 +19,17 @@ export class ReviewController {
 
   // Endpoint para criar um review
   @Post('teachers/:teacherId/students/:studentId')
-  @HttpCode(HttpStatus.CREATED)
   async createReview(
     @Param('teacherId') teacherId: string,
     @Param('studentId') studentId: string,
     @Body() reviewData: ReviewData,
   ) {
     const createdAt = new Date().toISOString();
-    return this.reviewService.createReview({
+
+    return this.reviewService.createReview(teacherId, {
       ...reviewData,
-      teacherId,
-      studentId,
+      teacherId, // <-- sempre da URL
+      studentId, // <-- sempre da URL
       createdAt,
     });
   }
