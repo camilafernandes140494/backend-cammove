@@ -15,14 +15,14 @@ export class WorkoutsDayController {
 
   // Endpoint para criar um review
   @Post('students/:studentId')
-  async createReview(@Param('studentId') studentId: string) {
+  async logTrainingDay(@Param('studentId') studentId: string) {
     return this.workoutsDayService.logTrainingDay(studentId);
   }
 
   // Endpoint para listar todos os reviews de um professor
   @Get('students/:studentId')
   @HttpCode(HttpStatus.OK)
-  async getAllReviewsByProfessor(@Param('studentId') studentId: string) {
+  async getTrainingDays(@Param('studentId') studentId: string) {
     return this.workoutsDayService.getTrainingDays(studentId);
   }
 }
