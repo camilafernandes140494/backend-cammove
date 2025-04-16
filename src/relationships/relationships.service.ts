@@ -125,12 +125,12 @@ export class RelationshipsService {
     }
   }
 
-  async getTeacherOfStudent(studentsId: string): Promise<any> {
+  async getTeacherOfStudent(studentId: string): Promise<any> {
     try {
       // Busca os relacionamentos onde o professor é o teacherId
       const relationshipsSnapshot = await this.firestore
         .collection('relationships')
-        .where('studentsId', '==', studentsId)
+        .where('studentId', '==', studentId)
         .limit(1)
         .get();
 
