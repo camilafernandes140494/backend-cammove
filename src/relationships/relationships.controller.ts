@@ -51,11 +51,8 @@ export class RelationshipsController {
   }
 
   @Get('students/:studentsId/teacher')
-  async getTeacherOfStudent(
-    @Param('studentsId') teacherId: string,
-    @Query('status') status: string | null,
-  ) {
-    return this.assignUsersService.getStudentsOfTeacher(teacherId, status);
+  async getTeacherOfStudent(@Param('studentsId') studentsId: string) {
+    return this.assignUsersService.getStudentsOfTeacher(studentsId);
   }
 
   @Get('teachers/:teacherId/students/:studentId')
