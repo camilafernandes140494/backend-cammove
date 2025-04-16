@@ -50,7 +50,7 @@ export class RelationshipsController {
     return this.assignUsersService.getStudentsOfTeacher(teacherId, status);
   }
 
-  @Get('students/:studentsId/teacher')
+  @Get('students/:studentId/teacher')
   async getTeacherOfStudent(@Param('studentId') studentId: string) {
     return this.assignUsersService.getTeacherOfStudent(studentId);
   }
