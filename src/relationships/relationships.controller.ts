@@ -52,7 +52,7 @@ export class RelationshipsController {
 
   @Get('students/:studentsId/teacher')
   async getTeacherOfStudent(@Param('studentsId') studentsId: string) {
-    return this.assignUsersService.getStudentsOfTeacher(studentsId);
+    return this.assignUsersService.getTeacherOfStudent(studentsId);
   }
 
   @Get('teachers/:teacherId/students/:studentId')
