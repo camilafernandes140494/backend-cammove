@@ -12,7 +12,7 @@ export class WorkoutsDayService {
       const brazilOffsetMs = -3 * 60 * 60 * 1000;
       const brazilDate = new Date(now.getTime() + brazilOffsetMs);
 
-      const trainedAt = now.toISOString(); // horário UTC real da máquina
+      const trainedAt = brazilDate.toISOString(); // horário UTC real da máquina
       const dateId = brazilDate.toISOString().slice(0, 10); // data no horário do Brasil
 
       const ref = this.firestore
