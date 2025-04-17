@@ -6,18 +6,28 @@ export class WorkoutsDayService {
 
   async logTrainingDay(studentId: string): Promise<any> {
     try {
-      const trainedAt = new Date().toISOString();
-      const dateId = trainedAt.slice(0, 10); // '2025-04-16'
+      const now = new Date();
+
+      // Ajusta para o horário de Brasília (UTC-3)
+      const brazilOffsetMs = -3 * 60 * 60 * 1000;
+      const brazilDate = new Date(now.getTime() + brazilOffsetMs);
+
+      const trainedAt = now.toISOString(); // horário UTC real da máquina
+      const dateId = brazilDate.toISOString().slice(0, 10); // data no horário do Brasil
 
       const ref = this.firestore
         .collection('workoutsDay')
         .doc(studentId)
         .collection('days')
-        .doc(dateId); // 1 documento por dia
+        .doc(dateId); // salva com a data certa do Brasil
 
       await ref.set({ trainedAt });
 
-      return { message: 'Dia de treino registrado!', date: trainedAt };
+      return {
+        message: 'Dia de treino registrado!',
+        date: trainedAt,
+        savedAs: dateId, // mostra a data que foi salva
+      };
     } catch (error) {
       throw new Error('Erro ao registrar treino: ' + error.message);
     }
