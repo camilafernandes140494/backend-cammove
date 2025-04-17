@@ -21,6 +21,8 @@ import { ReviewService } from './review/review.service';
 import { ReviewController } from './review/review.controller';
 import { WorkoutsDayService } from './workoutsDay/workoutsDay.service';
 import { WorkoutsDayController } from './workoutsDay/workoutsDay.controller';
+import { ScheduleController } from './schedule/schedule.controller';
+import { ScheduleService } from './schedule/schedule.service';
 
 @Module({
   imports: [],
@@ -35,6 +37,7 @@ import { WorkoutsDayController } from './workoutsDay/workoutsDay.controller';
     EmailController,
     ReviewController,
     WorkoutsDayController,
+    ScheduleController,
   ],
   providers: [
     AuthService,
@@ -48,6 +51,7 @@ import { WorkoutsDayController } from './workoutsDay/workoutsDay.controller';
     EmailService,
     ReviewService,
     WorkoutsDayService,
+    ScheduleService,
   ],
 })
 export class AppModule {}
