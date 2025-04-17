@@ -10,7 +10,7 @@ export class WorkoutsDayService {
       const dateId = trainedAt.slice(0, 10); // '2025-04-16'
 
       const ref = this.firestore
-        .collection('workouts-day')
+        .collection('workoutsDay')
         .doc(studentId)
         .collection('days')
         .doc(dateId); // 1 documento por dia
@@ -26,7 +26,7 @@ export class WorkoutsDayService {
   async getTrainingDays(studentId: string): Promise<string[]> {
     try {
       const snapshot = await this.firestore
-        .collection('workouts-day')
+        .collection('workoutsDay')
         .doc(studentId)
         .collection('days')
         .get();
