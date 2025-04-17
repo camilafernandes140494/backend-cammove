@@ -5,23 +5,41 @@ import {
   HttpStatus,
   Param,
   Get,
+  Body,
+  Patch,
 } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
+import { SchedulesData } from './schedule.types';
 
-@Controller('schedule')
+@Controller('schedules')
 export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
-  // Endpoint para criar um review
-  @Post('students/:studentId')
-  async logTrainingDay(@Param('studentId') studentId: string) {
-    return this.scheduleService.logTrainingDay(studentId);
+  @Post('teachers/:teacherId')
+  async createSchedules(
+    @Param('teacherId') teacherId: string,
+    @Body() schedulesData: SchedulesData,
+  ) {
+    return this.scheduleService.createSchedules(teacherId, schedulesData);
   }
 
-  // Endpoint para listar todos os reviews de um professor
-  @Get('students/:studentId')
+  @Get('teachers/:teacherId')
   @HttpCode(HttpStatus.OK)
-  async getTrainingDays(@Param('studentId') studentId: string) {
-    return this.scheduleService.getTrainingDays(studentId);
+  async getSchedules(@Param('teacherId') teacherId: string) {
+    return this.scheduleService.getSchedules(teacherId);
+  }
+
+  @Patch('teachers/:teacherId/schedules/:scheduleId')
+  @HttpCode(HttpStatus.OK)
+  async updateSchedules(
+    @Param('scheduleId') scheduleId: string,
+    @Param('teacherId') teacherId: string,
+    @Body() updateData: Partial<SchedulesData>,
+  ) {
+    return this.scheduleService.updateSchedules(
+      teacherId,
+      scheduleId,
+      updateData,
+    );
   }
 }

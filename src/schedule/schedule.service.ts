@@ -1,49 +1,78 @@
 // review.service.ts
 import * as admin from 'firebase-admin';
+import { SchedulesData } from './schedule.types';
 
 export class ScheduleService {
   private firestore = admin.firestore();
 
-  async logTrainingDay(studentId: string): Promise<any> {
+  async createSchedules(
+    teacherId: string,
+    schedulesData: SchedulesData,
+  ): Promise<any> {
     try {
-      const now = new Date();
+      const schedulesCollectionRef = this.firestore
+        .collection('schedules')
+        .doc(teacherId)
+        .collection('schedule');
 
-      // Ajusta para o horário de Brasília (UTC-3)
-      const brazilOffsetMs = -3 * 60 * 60 * 1000;
-      const brazilDate = new Date(now.getTime() + brazilOffsetMs);
+      const newSchedulesRef = schedulesCollectionRef.doc();
+      const createdAt = new Date().toISOString();
 
-      const trainedAt = brazilDate.toISOString(); // horário UTC real da máquina
-      const dateId = brazilDate.toISOString().slice(0, 10); // data no horário do Brasil
-
-      const ref = this.firestore
-        .collection('workoutsDay')
-        .doc(studentId)
-        .collection('days')
-        .doc(dateId); // salva com a data certa do Brasil
-
-      await ref.set({ trainedAt });
+      await newSchedulesRef.set({
+        ...schedulesData,
+        createdAt,
+      });
 
       return {
-        message: 'Dia de treino registrado!',
-        date: trainedAt,
-        savedAs: dateId, // mostra a data que foi salva
+        message: 'Agendamento cadastrado com sucesso',
+        id: newSchedulesRef.id,
       };
     } catch (error) {
-      throw new Error('Erro ao registrar treino: ' + error.message);
+      throw new Error('Erro ao cadastrar agendamento: ' + error.message);
     }
   }
 
-  async getTrainingDays(studentId: string): Promise<string[]> {
+  async getSchedules(teacherId: string) {
     try {
       const snapshot = await this.firestore
-        .collection('workoutsDay')
-        .doc(studentId)
-        .collection('days')
+        .collection('schedules')
+        .doc(teacherId)
+        .collection('schedule')
         .get();
 
-      return snapshot.docs.map((doc) => doc.id); // retorna: ['2025-04-14', '2025-04-15', ...]
+      if (snapshot.empty) {
+        return {
+          message: 'Nenhum agendamentos encontrado para este professor.',
+        };
+      }
+      const schedules = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return schedules;
     } catch (error) {
-      throw new Error('Erro ao buscar dias de treino: ' + error.message);
+      throw new Error('Erro ao buscar agendamentos: ' + error.message);
+    }
+  }
+
+  async updateSchedules(
+    teacherId: string,
+    scheduleId: string,
+    schedulesData: Partial<SchedulesData>,
+  ): Promise<any> {
+    try {
+      const schedulesRef = this.firestore
+        .collection('schedules')
+        .doc(teacherId)
+        .collection('schedule')
+        .doc(scheduleId);
+
+      await schedulesRef.update(schedulesData);
+
+      return { message: 'Agendamento atualizado com sucesso', id: scheduleId };
+    } catch (error) {
+      throw new Error('Erro ao atualizar agendamento: ' + error.message);
     }
   }
 }
