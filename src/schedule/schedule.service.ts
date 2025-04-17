@@ -56,6 +56,30 @@ export class ScheduleService {
     }
   }
 
+  async getSchedulesById(teacherId: string, scheduleId: string) {
+    try {
+      const snapshot = await this.firestore
+        .collection('schedules')
+        .doc(teacherId)
+        .collection('schedule')
+        .doc(scheduleId)
+        .get();
+
+      if (!snapshot.exists) {
+        return {
+          message: 'Nenhum agendamento encontrado.',
+        };
+      }
+
+      return {
+        id: snapshot.id,
+        ...snapshot.data(),
+      };
+    } catch (error) {
+      throw new Error('Erro ao buscar agendamentos: ' + error.message);
+    }
+  }
+
   async updateSchedules(
     teacherId: string,
     scheduleId: string,

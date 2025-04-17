@@ -29,6 +29,15 @@ export class ScheduleController {
     return this.scheduleService.getSchedules(teacherId);
   }
 
+  @Get('teachers/:teacherId/schedules/:scheduleId')
+  @HttpCode(HttpStatus.OK)
+  async getSchedulesById(
+    @Param('teacherId') teacherId: string,
+    @Param('scheduleId') scheduleId: string,
+  ) {
+    return this.scheduleService.getSchedulesById(teacherId, scheduleId);
+  }
+
   @Patch('teachers/:teacherId/schedules/:scheduleId')
   @HttpCode(HttpStatus.OK)
   async updateSchedules(
