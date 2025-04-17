@@ -19,6 +19,8 @@ import { EmailController } from './email/email.controller';
 import { EmailService } from './email/email.service';
 import { ReviewService } from './review/review.service';
 import { ReviewController } from './review/review.controller';
+import { WorkoutsDayService } from './workoutsDay/workoutsDay.service';
+import { WorkoutsDayController } from './workoutsDay/workoutsDay.controller';
 
 @Module({
   imports: [],
@@ -32,6 +34,7 @@ import { ReviewController } from './review/review.controller';
     UploadController,
     EmailController,
     ReviewController,
+    WorkoutsDayController,
   ],
   providers: [
     AuthService,
@@ -44,6 +47,7 @@ import { ReviewController } from './review/review.controller';
     SupabaseService,
     EmailService,
     ReviewService,
+    WorkoutsDayService,
   ],
 })
 export class AppModule {}
