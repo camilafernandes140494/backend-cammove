@@ -95,10 +95,12 @@ export class ScheduleService {
         };
       }
 
-      const dates = snapshot.docs.map((doc) => doc.data().date).filter(Boolean);
+      const dates = snapshot.docs
+        .map((doc) => doc.data().date) // isso retorna arrays de datas
+        .filter(Boolean)
+        .flat();
 
       return {
-        teacherId,
         dates,
       };
     } catch (error) {
