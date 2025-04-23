@@ -80,6 +80,32 @@ export class ScheduleService {
     }
   }
 
+  async getScheduleDates(teacherId: string): Promise<any> {
+    try {
+      const snapshot = await this.firestore
+        .collection('schedules')
+        .doc(teacherId)
+        .collection('schedule')
+        .get();
+
+      if (snapshot.empty) {
+        return {
+          message: 'Nenhum agendamento encontrado para este professor.',
+          dates: [],
+        };
+      }
+
+      const dates = snapshot.docs.map((doc) => doc.data().date).filter(Boolean);
+
+      return {
+        teacherId,
+        dates,
+      };
+    } catch (error) {
+      throw new Error('Erro ao buscar datas de agendamentos: ' + error.message);
+    }
+  }
+
   async updateSchedules(
     teacherId: string,
     scheduleId: string,

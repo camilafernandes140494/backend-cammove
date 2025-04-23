@@ -29,6 +29,12 @@ export class ScheduleController {
     return this.scheduleService.getSchedules(teacherId);
   }
 
+  @Get('teachers/:teacherId/dates')
+  @HttpCode(HttpStatus.OK)
+  async getScheduleDates(@Param('teacherId') teacherId: string) {
+    return this.scheduleService.getScheduleDates(teacherId);
+  }
+
   @Get('teachers/:teacherId/schedules/:scheduleId')
   @HttpCode(HttpStatus.OK)
   async getSchedulesById(

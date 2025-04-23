@@ -12,4 +12,5 @@ export type SchedulesData = {
   updatedAt: string;
   students: ScheduledStudents[];
   available: boolean;
+  studentLimit: number;
 };
