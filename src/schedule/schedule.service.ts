@@ -127,4 +127,19 @@ export class ScheduleService {
       throw new Error('Erro ao atualizar agendamento: ' + error.message);
     }
   }
+
+  async deleteSchedules(teacherId: string, scheduleId: string): Promise<any> {
+    try {
+      await this.firestore
+        .collection('schedules')
+        .doc(teacherId)
+        .collection('schedule')
+        .doc(scheduleId)
+        .delete();
+
+      return { message: 'Agendamento deletado com sucesso', id: scheduleId };
+    } catch (error) {
+      throw new Error('Erro ao deletar agendamento: ' + error.message);
+    }
+  }
 }

@@ -7,6 +7,7 @@ import {
   Get,
   Body,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { ScheduleService } from './schedule.service';
 import { SchedulesData } from './schedule.types';
@@ -56,5 +57,14 @@ export class ScheduleController {
       scheduleId,
       updateData,
     );
+  }
+
+  @Delete('teachers/:teacherId/schedules/:scheduleId/delete')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteSchedules(
+    @Param('teacherId') teacherId: string,
+    @Param('scheduleId') scheduleId: string,
+  ) {
+    await this.scheduleService.deleteSchedules(teacherId, scheduleId);
   }
 }
