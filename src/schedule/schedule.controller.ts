@@ -21,19 +21,19 @@ export class ScheduleController {
     @Param('teacherId') teacherId: string,
     @Body() schedulesData: SchedulesData,
   ) {
-    return this.scheduleService.createSchedules(teacherId, schedulesData);
+    return await this.scheduleService.createSchedules(teacherId, schedulesData);
   }
 
   @Get('teachers/:teacherId')
   @HttpCode(HttpStatus.OK)
   async getSchedules(@Param('teacherId') teacherId: string) {
-    return this.scheduleService.getSchedules(teacherId);
+    return await this.scheduleService.getSchedules(teacherId);
   }
 
   @Get('teachers/:teacherId/dates')
   @HttpCode(HttpStatus.OK)
   async getScheduleDates(@Param('teacherId') teacherId: string) {
-    return this.scheduleService.getScheduleDates(teacherId);
+    return await this.scheduleService.getScheduleDates(teacherId);
   }
 
   @Get('teachers/:teacherId/schedules/:scheduleId')
@@ -42,7 +42,7 @@ export class ScheduleController {
     @Param('teacherId') teacherId: string,
     @Param('scheduleId') scheduleId: string,
   ) {
-    return this.scheduleService.getSchedulesById(teacherId, scheduleId);
+    return await this.scheduleService.getSchedulesById(teacherId, scheduleId);
   }
 
   @Patch('teachers/:teacherId/schedules/:scheduleId')
@@ -52,7 +52,7 @@ export class ScheduleController {
     @Param('teacherId') teacherId: string,
     @Body() updateData: Partial<SchedulesData>,
   ) {
-    return this.scheduleService.updateSchedules(
+    return await this.scheduleService.updateSchedules(
       teacherId,
       scheduleId,
       updateData,
@@ -60,11 +60,11 @@ export class ScheduleController {
   }
 
   @Delete('teachers/:teacherId/schedules/:scheduleId/delete')
-  @HttpCode(HttpStatus.NO_CONTENT)
+  @HttpCode(HttpStatus.OK)
   async deleteSchedules(
     @Param('teacherId') teacherId: string,
     @Param('scheduleId') scheduleId: string,
   ) {
-    await this.scheduleService.deleteSchedules(teacherId, scheduleId);
+    return await this.scheduleService.deleteSchedules(teacherId, scheduleId);
   }
 }
