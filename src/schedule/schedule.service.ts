@@ -160,7 +160,7 @@ export class ScheduleService {
         };
       }
 
-      return { dates: allDates }; // Retorna o nome e a hora
+      return allDates; // Retorna o nome e a hora
     } catch (error) {
       throw new Error(
         'Erro ao buscar datas de agendamentos do estudante: ' + error.message,
