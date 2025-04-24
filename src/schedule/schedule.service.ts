@@ -108,6 +108,52 @@ export class ScheduleService {
     }
   }
 
+  async getScheduleDatesByStudent(
+    teacherId: string,
+    studentId: string,
+  ): Promise<any> {
+    try {
+      const snapshot = await this.firestore
+        .collection('schedules')
+        .doc(teacherId)
+        .collection('schedule')
+        .get();
+
+      if (snapshot.empty) {
+        return {
+          message: 'Nenhum agendamento encontrado para este professor.',
+          dates: [],
+        };
+      }
+
+      const allDates: string[] = [];
+
+      snapshot.forEach((doc) => {
+        const data = doc.data() as SchedulesData;
+        const isStudentScheduled = data.students.some(
+          (student) => student.studentId === studentId,
+        );
+
+        if (isStudentScheduled && data.date) {
+          allDates.push(...data.date);
+        }
+      });
+
+      if (allDates.length === 0) {
+        return {
+          message: 'Nenhum agendamento encontrado para este estudante.',
+          dates: [],
+        };
+      }
+
+      return { dates: allDates };
+    } catch (error) {
+      throw new Error(
+        'Erro ao buscar datas de agendamentos do estudante: ' + error.message,
+      );
+    }
+  }
+
   async updateSchedules(
     teacherId: string,
     scheduleId: string,

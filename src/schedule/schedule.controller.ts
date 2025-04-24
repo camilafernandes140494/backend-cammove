@@ -36,6 +36,18 @@ export class ScheduleController {
     return await this.scheduleService.getScheduleDates(teacherId);
   }
 
+  @Get('teachers/:teacherId/students/:studentId/dates')
+  @HttpCode(HttpStatus.OK)
+  async getScheduleDatesByStudent(
+    @Param('teacherId') teacherId: string,
+    @Param('studentId') studentId: string,
+  ) {
+    return await this.scheduleService.getScheduleDatesByStudent(
+      teacherId,
+      studentId,
+    );
+  }
+
   @Get('teachers/:teacherId/schedules/:scheduleId')
   @HttpCode(HttpStatus.OK)
   async getSchedulesById(
