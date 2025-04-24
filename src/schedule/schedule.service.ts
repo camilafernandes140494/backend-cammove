@@ -126,7 +126,12 @@ export class ScheduleService {
         };
       }
 
-      const allDates: string[] = [];
+      const allDates: {
+        date: string;
+        name: string;
+        time: string[];
+        description: string;
+      }[] = [];
 
       snapshot.forEach((doc) => {
         const data = doc.data() as SchedulesData;
@@ -134,8 +139,17 @@ export class ScheduleService {
           (student) => student.studentId === studentId,
         );
 
+        // Verifica se o aluno está agendado e se há datas associadas
         if (isStudentScheduled && data.date) {
-          allDates.push(...data.date);
+          // Para cada data, adiciona o nome e os horários
+          data.date.forEach((date) => {
+            allDates.push({
+              date,
+              name: data.name, // Nome do agendamento
+              time: data.time, // Horários relacionados
+              description: data.description,
+            });
+          });
         }
       });
 
@@ -146,7 +160,7 @@ export class ScheduleService {
         };
       }
 
-      return { dates: allDates };
+      return { dates: allDates }; // Retorna o nome e a hora
     } catch (error) {
       throw new Error(
         'Erro ao buscar datas de agendamentos do estudante: ' + error.message,
