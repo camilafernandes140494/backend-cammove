@@ -26,6 +26,31 @@ export class ReviewService {
     }
   }
 
+  async getReviewsByTeacher(teacherId: string, limit?: number): Promise<any[]> {
+    try {
+      let feedbacksRef = this.firestore
+        .collection('reviews')
+        .doc(teacherId)
+        .collection('feedbacks')
+        .orderBy('createdAt', 'desc');
+
+      if (limit) {
+        feedbacksRef = feedbacksRef.limit(limit);
+      }
+
+      const snapshot = await feedbacksRef.get();
+
+      const reviews = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      return reviews;
+    } catch (error) {
+      throw new Error('Erro ao buscar feedbacks: ' + error.message);
+    }
+  }
+
   async getReviewByWorkoutAndStudent(
     teacherId: string,
     workoutId: string,

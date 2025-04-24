@@ -8,6 +8,7 @@ import {
   Get,
   Delete,
   Patch,
+  Query,
 } from '@nestjs/common';
 
 import { ReviewService } from './review.service';
@@ -32,6 +33,15 @@ export class ReviewController {
       studentId, // <-- sempre da URL
       createdAt,
     });
+  }
+
+  @Get('teachers/:teacherId/reviews')
+  async getReviewsByTeacher(
+    @Param('teacherId') teacherId: string,
+    @Query('limit') limit?: string,
+  ) {
+    const parsedLimit = limit ? parseInt(limit, 10) : undefined;
+    return this.reviewService.getReviewsByTeacher(teacherId, parsedLimit);
   }
 
   // Endpoint para obter review por professor, workout e aluno
