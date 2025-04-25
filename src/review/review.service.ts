@@ -5,9 +5,13 @@ import { ReviewData } from './review.types';
 export class ReviewService {
   private firestore = admin.firestore();
 
-  async createReview(teacherId: string, reviewData: ReviewData): Promise<any> {
+  async createReview(
+    teacherId: string,
+    studentId: string,
+    reviewData: ReviewData,
+  ): Promise<any> {
     try {
-      const docId = `${reviewData.workoutId}_${reviewData.studentId}`;
+      const docId = `${reviewData.workoutId}_${studentId}`;
 
       const ReviewRef = this.firestore
         .collection('reviews')

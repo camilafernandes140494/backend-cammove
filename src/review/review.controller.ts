@@ -27,10 +27,9 @@ export class ReviewController {
   ) {
     const createdAt = new Date().toISOString();
 
-    return this.reviewService.createReview(teacherId, {
+    return this.reviewService.createReview(teacherId, studentId, {
       ...reviewData,
       teacherId, // <-- sempre da URL
-      studentId, // <-- sempre da URL
       createdAt,
     });
   }
