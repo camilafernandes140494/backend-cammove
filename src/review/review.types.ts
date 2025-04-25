@@ -10,6 +10,7 @@ export type ReviewData = {
   review: string;
   reviewNote: string;
   reviewDescription: string;
+  reviewFeedback: string;
   createdAt: string;
   updateAt: string;
 };
