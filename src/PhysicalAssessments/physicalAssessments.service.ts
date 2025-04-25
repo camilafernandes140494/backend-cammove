@@ -33,7 +33,7 @@ export class PhysicalAssessmentsService {
         .doc(newAssessmentsRef.id); // Criando um treino com ID único
 
       await summaryRef.set({
-        workoutId: newAssessmentsRef.id,
+        assessmentsId: newAssessmentsRef.id,
         createdAt,
         expireAt,
         studentName: physicalAssessmentData.studentName,
@@ -73,7 +73,7 @@ export class PhysicalAssessmentsService {
         .doc(assessmentsId);
 
       // Atualiza apenas os campos enviados no `updateData`
-      await summaryRef.update(updateData);
+      await summaryRef.update({ ...updateData, assessmentsId: assessmentsId });
 
       return { message: 'Avaliação atualizada com sucesso', id: assessmentsId };
     } catch (error) {
