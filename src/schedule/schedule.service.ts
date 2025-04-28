@@ -1,6 +1,6 @@
 // review.service.ts
 import * as admin from 'firebase-admin';
-import { SchedulesData } from './schedule.types';
+import { ScheduledStudents, SchedulesData } from './schedule.types';
 
 export class ScheduleService {
   private firestore = admin.firestore();
@@ -95,14 +95,38 @@ export class ScheduleService {
         };
       }
 
-      const dates = snapshot.docs
-        .map((doc) => doc.data().date) // isso retorna arrays de datas
-        .filter(Boolean)
-        .flat();
+      const allDates: {
+        date: string;
+        name: string;
+        time: string[];
+        students: ScheduledStudents[];
+        description: string;
+      }[] = [];
 
-      return {
-        dates,
-      };
+      snapshot.forEach((doc) => {
+        const data = doc.data() as SchedulesData;
+        if (data.date) {
+          // Para cada data, adiciona o nome e os horários
+          data.date.forEach((date) => {
+            allDates.push({
+              date,
+              name: data.name, // Nome do agendamento
+              time: data.time, // Horários relacionados,
+              students: data.students,
+              description: data.description,
+            });
+          });
+        }
+      });
+
+      if (allDates.length === 0) {
+        return {
+          message: 'Nenhum agendamento encontrado para este estudante.',
+          dates: [],
+        };
+      }
+
+      return allDates; // Retorna o nome e a hora
     } catch (error) {
       throw new Error('Erro ao buscar datas de agendamentos: ' + error.message);
     }
