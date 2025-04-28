@@ -24,13 +24,12 @@ export class S3Service {
   }
 
   async uploadFile(file: Express.Multer.File, folder: string) {
-    // Definindo a chave do arquivo, incluindo a pasta
     const convertedBuffer = await sharp(file.buffer)
       .webp({ quality: 80 })
       .toBuffer();
 
     const newFileName = `${Date.now()}-${file.originalname.split('.')[0]}.webp`;
-    const fileKey = `${folder}/${newFileName}`; // Adicionando a pasta na chave
+    const fileKey = `${folder}/${newFileName}`;
 
     const uploadParams = {
       Bucket: this.bucketName,
@@ -40,7 +39,17 @@ export class S3Service {
     };
 
     await this.s3.send(new PutObjectCommand(uploadParams));
-    return { key: fileKey };
+
+    // Aqui já gera a URL assinada
+    const command = new GetObjectCommand({
+      Bucket: this.bucketName,
+      Key: fileKey,
+    });
+
+    const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+
+    // Retorna tanto a chave quanto a URL
+    return { key: fileKey, url };
   }
 
   async getSignedUrl(folder: string, key: string) {
