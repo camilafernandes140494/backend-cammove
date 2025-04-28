@@ -16,12 +16,13 @@ export class S3Controller {
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    return await this.s3Service.uploadFile(file);
+    const folder = 'uploads'; // Nome da pasta no bucket
+    return await this.s3Service.uploadFile(file, folder);
   }
 
-  @Get(':key')
-  async getImage(@Param('key') key: string) {
-    const url = await this.s3Service.getSignedUrl(key);
+  @Get(':folder/:key')
+  async getImage(@Param('folder') folder: string, @Param('key') key: string) {
+    const url = await this.s3Service.getSignedUrl(folder, key);
     return { url };
   }
 }
