@@ -13,10 +13,12 @@ import {
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 
-  @Post('upload')
+  @Post(':folder/upload')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    const folder = 'uploads'; // Nome da pasta no bucket
+  async uploadFile(
+    @Param('folder') folder: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
     return await this.s3Service.uploadFile(file, folder);
   }
 
