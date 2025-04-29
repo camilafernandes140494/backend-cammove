@@ -40,4 +40,13 @@ export class S3Controller {
     await this.s3Service.deleteFile(folder, key);
     // 204 No Content não retorna body
   }
+
+  @Post(':folder/upload/video')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadVideo(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('folder') folder: string,
+  ) {
+    return this.s3Service.uploadVideo(file, folder || 'videos');
+  }
 }

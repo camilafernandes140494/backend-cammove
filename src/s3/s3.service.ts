@@ -23,6 +23,24 @@ export class S3Service {
     this.bucketName = process.env.AWS_BUCKET_NAME;
   }
 
+  async uploadVideo(file: Express.Multer.File, folder: string) {
+    const newFileName = `${Date.now()}-${file.originalname}`;
+    const fileKey = `${folder}/${newFileName}`;
+
+    const uploadParams = {
+      Bucket: this.bucketName,
+      Key: fileKey,
+      Body: file.buffer,
+      ContentType: file.mimetype, // Vídeos têm diferentes tipos MIME (video/mp4, etc.)
+    };
+
+    await this.s3.send(new PutObjectCommand(uploadParams));
+
+    const url = `https://${this.bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+
+    return { key: fileKey, url };
+  }
+
   async uploadFile(file: Express.Multer.File, folder: string) {
     const convertedBuffer = await sharp(file.buffer)
       .webp({ quality: 80 })
