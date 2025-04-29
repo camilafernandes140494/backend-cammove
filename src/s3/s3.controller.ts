@@ -24,7 +24,7 @@ export class S3Controller {
 
   @Get(':folder/:key')
   async getImage(@Param('folder') folder: string, @Param('key') key: string) {
-    const url = await this.s3Service.getSignedUrl(folder, key);
+    const url = await this.s3Service.getPublicUrl(folder, key);
     return { url };
   }
 }
