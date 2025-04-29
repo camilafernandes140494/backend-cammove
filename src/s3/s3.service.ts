@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} from '@aws-sdk/client-s3';
 import sharp from 'sharp';
 
 @Injectable()
@@ -51,5 +55,16 @@ export class S3Service {
     // Retorna a URL pública do arquivo
     const url = `https://${this.bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
     return url;
+  }
+
+  async deleteFile(key: string) {
+    await this.s3.send(
+      new DeleteObjectCommand({
+        Bucket: this.bucketName,
+        Key: key,
+      }),
+    );
+
+    return { message: 'Arquivo deletado com sucesso.', key };
   }
 }
