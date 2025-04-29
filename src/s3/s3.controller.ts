@@ -31,10 +31,13 @@ export class S3Controller {
     return { url };
   }
 
-  @Delete(':key')
+  @Delete(':folder/:key')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteImage(@Param('key') key: string) {
-    await this.s3Service.deleteFile(key);
+  async deleteImage(
+    @Param('folder') folder: string,
+    @Param('key') key: string,
+  ) {
+    await this.s3Service.deleteFile(folder, key);
     // 204 No Content não retorna body
   }
 }

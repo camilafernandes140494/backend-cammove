@@ -57,11 +57,11 @@ export class S3Service {
     return url;
   }
 
-  async deleteFile(key: string) {
+  async deleteFile(folder: string, key: string) {
     await this.s3.send(
       new DeleteObjectCommand({
         Bucket: this.bucketName,
-        Key: key,
+        Key: `${folder}/${key}`,
       }),
     );
 
