@@ -1,11 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import {
-  S3Client,
-  PutObjectCommand,
-  GetObjectCommand,
-} from '@aws-sdk/client-s3';
+import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
 import sharp from 'sharp';
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+
 @Injectable()
 export class S3Service {
   private s3: S3Client;
@@ -38,29 +34,22 @@ export class S3Service {
       ContentType: 'image/webp',
     };
 
+    // Faz o upload do arquivo para o S3
     await this.s3.send(new PutObjectCommand(uploadParams));
 
-    // Aqui já gera a URL assinada
-    const command = new GetObjectCommand({
-      Bucket: this.bucketName,
-      Key: fileKey,
-    });
+    // Gerar a URL pública (sem assinatura)
+    const url = `https://${this.bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
 
-    const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
-
-    // Retorna tanto a chave quanto a URL
+    // Retorna a chave do arquivo e a URL pública
     return { key: fileKey, url };
   }
 
-  async getSignedUrl(folder: string, key: string) {
-    const fileKey = `${folder}/${key}`; // A chave com a pasta
+  // Caso precise de uma função para obter a URL pública diretamente (sem assinatura)
+  async getPublicUrl(folder: string, key: string) {
+    const fileKey = `${folder}/${key}`;
 
-    const command = new GetObjectCommand({
-      Bucket: this.bucketName,
-      Key: fileKey,
-    });
-
-    const url = await getSignedUrl(this.s3, command, { expiresIn: 3600 });
+    // Retorna a URL pública do arquivo
+    const url = `https://${this.bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
     return url;
   }
 }
