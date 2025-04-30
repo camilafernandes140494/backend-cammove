@@ -55,6 +55,7 @@ export class UsersController {
       permission,
       image,
       email,
+      phone,
       status = 'ACTIVE',
     } = body;
 
@@ -69,6 +70,7 @@ export class UsersController {
       updatedAt,
       deletedAt,
       status,
+      phone,
     });
   }
 
@@ -84,7 +86,8 @@ export class UsersController {
       const updatedAt = new Date().toISOString();
 
       // Certifique-se de não enviar campos undefined
-      const { name, gender, birthDate, permission, image, status } = body;
+      const { name, gender, birthDate, permission, image, status, phone } =
+        body;
       const updateData = {
         ...(name && { name }),
         ...(gender && { gender }),
@@ -92,7 +95,7 @@ export class UsersController {
         ...(permission && { permission }),
         ...(image && { image }),
         ...(status && { status }),
-
+        ...(status && { phone }),
         updatedAt,
       };
 
