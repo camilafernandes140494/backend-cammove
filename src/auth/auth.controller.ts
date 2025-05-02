@@ -29,4 +29,11 @@ export class AuthController {
     const { idToken } = body;
     return this.authService.verifyToken(idToken);
   }
+
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() body: { email: string }) {
+    const { email } = body;
+    return this.authService.sendPasswordResetEmail(email);
+  }
 }

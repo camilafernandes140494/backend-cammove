@@ -70,4 +70,34 @@ export class AuthService {
       throw new Error('Erro ao realizar logout: ' + error.message);
     }
   }
+
+  // src/auth/auth.service.ts
+
+  async sendPasswordResetEmail(email: string): Promise<any> {
+    const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${process.env.APIKEY!}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          requestType: 'PASSWORD_RESET',
+          email,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(
+          `Erro ao enviar e-mail de redefinição: ${errorData.error.message}`,
+        );
+      }
+
+      return { message: 'Email de redefinição de senha enviado com sucesso.' };
+    } catch (error) {
+      throw new Error('Erro ao enviar e-mail de redefinição: ' + error.message);
+    }
+  }
 }
