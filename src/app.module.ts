@@ -25,6 +25,8 @@ import { ScheduleController } from './schedule/schedule.controller';
 import { ScheduleService } from './schedule/schedule.service';
 import { S3Controller } from './s3/s3.controller';
 import { S3Service } from './s3/s3.service';
+import { OpenAiService } from './openai/openai.service';
+import { OpenAiController } from './openai/openai.controller';
 
 @Module({
   imports: [],
@@ -41,6 +43,7 @@ import { S3Service } from './s3/s3.service';
     WorkoutsDayController,
     ScheduleController,
     S3Controller,
+    OpenAiController
   ],
   providers: [
     AuthService,
@@ -56,6 +59,7 @@ import { S3Service } from './s3/s3.service';
     WorkoutsDayService,
     ScheduleService,
     S3Service,
+    OpenAiService
   ],
 })
 export class AppModule {}
