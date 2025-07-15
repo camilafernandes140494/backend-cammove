@@ -59,22 +59,16 @@ Não adicione explicações ou texto fora do JSON.
       const response = await result.response;
       const content = response.text().trim();
 
+
       if (!content) {
         throw new Error('Resposta vazia do Gemini.');
       }
 
+      return content
       // O Gemini geralmente é bom em retornar o JSON puro se solicitado.
       // No entanto, é uma boa prática tentar parsear para garantir que é JSON válido.
       // Se a resposta não for um JSON válido, você pode querer adicionar uma lógica para tratar isso.
-      try {
-        JSON.parse(content);
-        return content;
-      } catch (jsonError) {
-        console.warn('Resposta do Gemini não é um JSON válido. Retornando conteúdo bruto.', content);
-        // Ou você pode lançar um erro aqui se o JSON for estritamente obrigatório
-        // throw new InternalServerErrorException('A resposta do Gemini não está no formato JSON esperado.');
-        return content; // Retorna o conteúdo bruto se não for JSON válido
-      }
+   
 
     } catch (error) {
       console.error('Erro ao gerar treino com Gemini:', error);
