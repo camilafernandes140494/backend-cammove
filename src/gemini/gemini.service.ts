@@ -1,12 +1,14 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai'; // Importe o SDK do Gemini
 import { WorkoutSuggestionData } from './gemini.types';
+import { ExercisesService } from 'src/exercises/exercises.service';
+import { Exercise } from 'src/exercises/exercises.types';
 
 @Injectable()
 export class GeminiService { // Renomeado para GeminiService para clareza
   private gemini: GenerativeModel;
 
-  constructor() {
+  constructor(  private readonly exercisesService: ExercisesService,) {
     const apiKey = process.env.GEMINI_API_KEY; // Use uma variável de ambiente para a chave Gemini
 
     if (!apiKey) {
@@ -18,35 +20,46 @@ export class GeminiService { // Renomeado para GeminiService para clareza
     this.gemini = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-pro' });
   }
 
-  async workoutSuggestion({ type, age, gender }: WorkoutSuggestionData): Promise<string> {
+  async workoutSuggestion({ type, age, gender, nameWorkout }: WorkoutSuggestionData): Promise<string> {
+      const availableExercises: Exercise[] = await this.exercisesService.getExercises({}); 
+
     const prompt = `
 Crie um treino de musculação para um aluno com as seguintes características:
 
 - Idade: ${age} anos
 - Sexo: ${gender}
 - Objetivo: ${type}
+- Nome de treino: ${nameWorkout}
 
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
+O treino deve ser **composto APENAS por exercícios da seguinte lista de exercícios disponíveis**:
 
-- "nome": nome do exercício
-- "series": número de séries
-- "repeticoes": número de repetições por série
-- "descanso": tempo de descanso entre as séries (em segundos)
+${availableExercises}
+O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
+
+- "name": nome do exercício (deve corresponder exatamente ao "name" da lista fornecida)
+- "exerciseId": ID do exercício (deve corresponder exatamente ao "id" da lista fornecida)
+- "sets": número de séries
+- "repetitions": número de repetições por série
+- "restTime": tempo de descanso entre as séries (em segundos)
+
 
 Exemplo de formato esperado:
 
 [
   {
-    "nome": "Agachamento livre",
-    "series": 4,
-    "repeticoes": 12,
-    "descanso": 60
+    "name": "Agachamento livre",
+    "exerciseId":12"",
+    "sets": 4,
+    "repetitions": 12,
+    "restTime": 60
   },
   {
-    "nome": "Supino reto com barra",
-    "series": 3,
-    "repeticoes": 10,
-    "descanso": 90
+    "name": "Supino reto com barra",
+    "exerciseId":"212",
+    "sets": 3,
+    "repetitions": 10,
+    "restTime": 90
   }
 ]
 
