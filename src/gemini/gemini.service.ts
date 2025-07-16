@@ -20,7 +20,7 @@ export class GeminiService { // Renomeado para GeminiService para clareza
     this.gemini = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-pro' });
   }
 
-  async workoutSuggestion({ type, age, gender, nameWorkout }: WorkoutSuggestionData): Promise<string> {
+  async workoutSuggestion({ type, age, gender, nameWorkout }: WorkoutSuggestionData): Promise<{}> {
       const availableExercises: Exercise[] = await this.exercisesService.getExercises({}); 
 
     const prompt = `
@@ -77,7 +77,7 @@ Não adicione explicações ou texto fora do JSON.
         throw new Error('Resposta vazia do Gemini.');
       }
 
-      return content
+      return {exercises:availableExercises, workout: content}
       // O Gemini geralmente é bom em retornar o JSON puro se solicitado.
       // No entanto, é uma boa prática tentar parsear para garantir que é JSON válido.
       // Se a resposta não for um JSON válido, você pode querer adicionar uma lógica para tratar isso.
