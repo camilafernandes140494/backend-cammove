@@ -23,6 +23,13 @@ export class GeminiService { // Renomeado para GeminiService para clareza
   async workoutSuggestion({ type, age, gender, nameWorkout }: WorkoutSuggestionData): Promise<{}> {
       const availableExercises: Exercise[] = await this.exercisesService.getExercises({}); 
 
+      const simplifiedExercises = availableExercises.map((ex) => ({
+  id: ex.id,
+  name: ex.name,
+  muscleGroup: ex.muscleGroup.join(', '),
+  category: ex.category
+}));
+
     const prompt = `
 Crie um treino de musculação para um aluno com as seguintes características:
 
@@ -33,7 +40,7 @@ Crie um treino de musculação para um aluno com as seguintes características:
 
 O treino deve ser composto **APENAS por exercícios da seguinte lista de exercícios disponíveis**:
 
-${availableExercises}
+${simplifiedExercises}
 
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 
