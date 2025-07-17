@@ -34,7 +34,7 @@ Crie um treino de musculação para um aluno com as seguintes características:
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 O treino deve ser **composto APENAS por exercícios da seguinte lista de exercícios disponíveis**:
 
-${availableExercises['exercises']}
+${availableExercises[0]['exercises']}
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 
 - "name": nome do exercício (deve corresponder exatamente ao "name" da lista fornecida)
