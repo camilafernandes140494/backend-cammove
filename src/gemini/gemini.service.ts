@@ -21,15 +21,25 @@ export class GeminiService { // Renomeado para GeminiService para clareza
   }
 
   async workoutSuggestion({ type, age, gender, nameWorkout }: WorkoutSuggestionData): Promise<{}> {
-      const availableExercises: Exercise[] = await this.exercisesService.getExercises({}); 
+    let availableExercises: Pick<Exercise, 'id' | 'name' | 'category' | 'description'| 'muscleGroup'>[] = []
+    try{
+      await this.exercisesService.getExercises({}); 
 
-      const simplifiedExercises = availableExercises.map((ex) => ({
-  id: ex.id,
-  name: ex.name,
-  muscleGroup: ex.muscleGroup.join(', '),
-  category: ex.category
-}));
+        const simplifiedExercises = availableExercises.map((ex) => ({
+        id: ex.id,
+        name: ex.name,
+        muscleGroup: ex.muscleGroup,
+        category: ex.category,
+        description: ex.description
+      }));
 
+      availableExercises = simplifiedExercises 
+    }
+    catch{
+      availableExercises = []
+    }
+
+    
     const prompt = `
 Crie um treino de musculação para um aluno com as seguintes características:
 
@@ -40,7 +50,7 @@ Crie um treino de musculação para um aluno com as seguintes características:
 
 O treino deve ser composto **APENAS por exercícios da seguinte lista de exercícios disponíveis**:
 
-${simplifiedExercises}
+${availableExercises}
 
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 
@@ -56,8 +66,6 @@ Exemplo de formato esperado:
   {
     "exerciseId":      {
         "name": "polichinelo ",
-        "createdAt": "2025-02-26T00:22:22.764Z",
-        "deletedAt": "",
         "id": "KWVMhuzwe0IWlqtY7Ctd",
         "muscleGroup": [
           "Ombros",
@@ -69,15 +77,7 @@ Exemplo de formato esperado:
           "value": "Musculação"
         },
         "category": "Musculação",
-        "images": [
-          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952217836-327E342C-B8EA-4DA0-83D3-C14CBFFECADC.webp",
-          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952246401-IMG_7897.webp",
-          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952251438-IMG_7901.webp",
-          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952256299-IMG_7904.webp",
-          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952260798-IMG_7898.webp",
-          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952265816-IMG_7899.webp"
-        ],
-        "updatedAt": "2025-04-29T19:00:34.075Z"
+  
       },,
     "sets": 4,
     "repetitions": 12,
@@ -92,7 +92,6 @@ Não adicione explicações ou texto fora do JSON.
       // Para Gemini, você usa o método `generateContent` para enviar o prompt.
       const result = await this.gemini.generateContent(prompt);
       const response = await result.response;
-      const content = response.text().trim();
 
 
 
