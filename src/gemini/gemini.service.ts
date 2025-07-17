@@ -92,7 +92,7 @@ Não adicione explicações ou texto fora do JSON.
         throw new Error('Resposta vazia do Gemini.');
       }
 
-      return {exercises:availableExercises, workout: content}
+      return {exercises:availableExercises,response:response,  workout: result}
       // O Gemini geralmente é bom em retornar o JSON puro se solicitado.
       // No entanto, é uma boa prática tentar parsear para garantir que é JSON válido.
       // Se a resposta não for um JSON válido, você pode querer adicionar uma lógica para tratar isso.
