@@ -31,10 +31,10 @@ Crie um treino de musculação para um aluno com as seguintes características:
 - Objetivo: ${type}
 - Nome de treino: ${nameWorkout}
 
-O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
-O treino deve ser **composto APENAS por exercícios da seguinte lista de exercícios disponíveis**:
+O treino deve ser composto **APENAS por exercícios da seguinte lista de exercícios disponíveis**:
 
-${availableExercises}
+${JSON.stringify(availableExercises, null, 2)}
+
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 
 - "exerciseId": o objeto do exercício  (deve corresponder exatamente ao lista fornecida)
@@ -88,11 +88,20 @@ Não adicione explicações ou texto fora do JSON.
       const content = response.text().trim();
 
 
-      if (!content) {
-        throw new Error('Resposta vazia do Gemini.');
+
+
+      let workoutData;
+      try {
+        workoutData = JSON.parse(content);
+      } catch (e) {
+        throw new InternalServerErrorException('Resposta da IA não está em formato JSON válido.');
       }
 
-      return {exercises:availableExercises,response:response,  workout: result}
+      return {
+        exercises: availableExercises,
+        workout: workoutData
+      };
+
       // O Gemini geralmente é bom em retornar o JSON puro se solicitado.
       // No entanto, é uma boa prática tentar parsear para garantir que é JSON válido.
       // Se a resposta não for um JSON válido, você pode querer adicionar uma lógica para tratar isso.
