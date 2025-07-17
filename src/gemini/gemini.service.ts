@@ -34,11 +34,10 @@ Crie um treino de musculação para um aluno com as seguintes características:
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 O treino deve ser **composto APENAS por exercícios da seguinte lista de exercícios disponíveis**:
 
-${availableExercises[0]['exercises']}
+${availableExercises}
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 
-- "name": nome do exercício (deve corresponder exatamente ao "name" da lista fornecida)
-- "exerciseId": ID do exercício (deve corresponder exatamente ao "id" da lista fornecida)
+- "exerciseId": o objeto do exercício  (deve corresponder exatamente ao lista fornecida)
 - "sets": número de séries
 - "repetitions": número de repetições por série
 - "restTime": tempo de descanso entre as séries (em segundos)
@@ -48,18 +47,34 @@ Exemplo de formato esperado:
 
 [
   {
-    "name": "Agachamento livre",
-    "exerciseId":12"",
+    "exerciseId":      {
+        "name": "polichinelo ",
+        "createdAt": "2025-02-26T00:22:22.764Z",
+        "deletedAt": "",
+        "id": "KWVMhuzwe0IWlqtY7Ctd",
+        "muscleGroup": [
+          "Ombros",
+          "Peito"
+        ],
+        "description": "Pula pula",
+        "categoryData": {
+          "label": "Musculação",
+          "value": "Musculação"
+        },
+        "category": "Musculação",
+        "images": [
+          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952217836-327E342C-B8EA-4DA0-83D3-C14CBFFECADC.webp",
+          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952246401-IMG_7897.webp",
+          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952251438-IMG_7901.webp",
+          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952256299-IMG_7904.webp",
+          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952260798-IMG_7898.webp",
+          "https://app-cammove-images.s3.us-east-2.amazonaws.com/exercises/1745952265816-IMG_7899.webp"
+        ],
+        "updatedAt": "2025-04-29T19:00:34.075Z"
+      },,
     "sets": 4,
     "repetitions": 12,
     "restTime": 60
-  },
-  {
-    "name": "Supino reto com barra",
-    "exerciseId":"212",
-    "sets": 3,
-    "repetitions": 10,
-    "restTime": 90
   }
 ]
 
