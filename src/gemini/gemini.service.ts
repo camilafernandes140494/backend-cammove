@@ -33,7 +33,7 @@ Crie um treino de musculação para um aluno com as seguintes características:
 
 O treino deve ser composto **APENAS por exercícios da seguinte lista de exercícios disponíveis**:
 
-${JSON.stringify(availableExercises, null, 2)}
+${availableExercises}
 
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 
@@ -90,16 +90,18 @@ Não adicione explicações ou texto fora do JSON.
 
 
 
-      let workoutData;
-      try {
-        workoutData = JSON.parse(content);
-      } catch (e) {
-        throw new InternalServerErrorException('Resposta da IA não está em formato JSON válido.');
-      }
+      // let workoutData;
+      // try {
+      //   workoutData = JSON.parse(content);
+      // } catch (e) {
+      //   throw new InternalServerErrorException('Resposta da IA não está em formato JSON válido.');
+      // }
 
       return {
+        result: result,
+        response: response,
         exercises: availableExercises,
-        workout: workoutData
+        // workout: workoutData
       };
 
       // O Gemini geralmente é bom em retornar o JSON puro se solicitado.
