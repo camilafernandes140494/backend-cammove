@@ -72,39 +72,23 @@ Não adicione explicações ou texto fora do JSON.
     `.trim();
 
     try {
-      // Para Gemini, você usa o método `generateContent` para enviar o prompt.
-      const result = await this.gemini.generateContent(prompt);
-      const response = await result.response;
+  console.log('Chamando Gemini...');
+  console.time('Gemini response time');
 
+  const result = await this.gemini.generateContent(prompt);
 
+  console.timeEnd('Gemini response time');
 
+  const response = await result.response;
+  const text = await response.text();
+  console.log('Texto gerado:', text);
 
-      // let workoutData;
-      // try {
-      //   workoutData = JSON.parse(content);
-      // } catch (e) {
-      //   throw new InternalServerErrorException('Resposta da IA não está em formato JSON válido.');
-      // }
+  return { result, response, text };
+} catch (err) {
+  console.error('Erro ao chamar Gemini:', err);
+  throw new InternalServerErrorException('Erro ao se comunicar com Gemini');
+}
 
-      return {
-        result: result,
-        response: response,
-        exercises: [],
-        // workout: workoutData
-      };
-
-      // O Gemini geralmente é bom em retornar o JSON puro se solicitado.
-      // No entanto, é uma boa prática tentar parsear para garantir que é JSON válido.
-      // Se a resposta não for um JSON válido, você pode querer adicionar uma lógica para tratar isso.
-   
-
-    } catch (error) {
-      console.error('Erro ao gerar treino com Gemini:', error);
-      // Você pode verificar o tipo de erro para dar uma mensagem mais específica
-      if (error.response && error.response.status) {
-        throw new InternalServerErrorException(`Erro na API Gemini: ${error.response.status} - ${error.response.statusText}`);
-      }
-      throw new InternalServerErrorException('Erro ao gerar treino com inteligência artificial.');
-    }
+  
   }
 }
