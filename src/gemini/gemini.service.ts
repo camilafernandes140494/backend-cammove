@@ -2,7 +2,6 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { GoogleGenerativeAI, GenerativeModel } from '@google/generative-ai'; // Importe o SDK do Gemini
 import { WorkoutSuggestionData } from './gemini.types';
 import { ExercisesService } from 'src/exercises/exercises.service';
-import { Exercise } from 'src/exercises/exercises.types';
 
 @Injectable()
 export class GeminiService { // Renomeado para GeminiService para clareza
@@ -21,23 +20,23 @@ export class GeminiService { // Renomeado para GeminiService para clareza
   }
 
   async workoutSuggestion({ type, age, gender, nameWorkout }: WorkoutSuggestionData): Promise<{}> {
-    let availableExercises: Pick<Exercise, 'id' | 'name' | 'category' | 'description'| 'muscleGroup'>[] = []
-    try{
-      await this.exercisesService.getExercises({}); 
+    // let availableExercises: Pick<Exercise, 'id' | 'name' | 'category' | 'description'| 'muscleGroup'>[] = []
+    // try{
+    //   await this.exercisesService.getExercises({}); 
 
-        const simplifiedExercises = availableExercises.map((ex) => ({
-        id: ex.id,
-        name: ex.name,
-        muscleGroup: ex.muscleGroup,
-        category: ex.category,
-        description: ex.description
-      }));
+    //     const simplifiedExercises = availableExercises.map((ex) => ({
+    //     id: ex.id,
+    //     name: ex.name,
+    //     muscleGroup: ex.muscleGroup,
+    //     category: ex.category,
+    //     description: ex.description
+    //   }));
 
-      availableExercises = simplifiedExercises 
-    }
-    catch{
-      availableExercises = []
-    }
+    //   availableExercises = simplifiedExercises 
+    // }
+    // catch{
+    //   availableExercises = []
+    // }
 
     
     const prompt = `
@@ -48,13 +47,11 @@ Crie um treino de musculação para um aluno com as seguintes características:
 - Objetivo: ${type}
 - Nome de treino: ${nameWorkout}
 
-O treino deve ser composto **APENAS por exercícios da seguinte lista de exercícios disponíveis**:
 
-${availableExercises}
 
 O treino deve ser retornado no formato JSON e conter um array de exercícios, onde cada item possui:
 
-- "exerciseId": o objeto do exercício  (deve corresponder exatamente ao lista fornecida)
+- "name": nome do exercicio
 - "sets": número de séries
 - "repetitions": número de repetições por série
 - "restTime": tempo de descanso entre as séries (em segundos)
@@ -64,21 +61,7 @@ Exemplo de formato esperado:
 
 [
   {
-    "exerciseId":      {
-        "name": "polichinelo ",
-        "id": "KWVMhuzwe0IWlqtY7Ctd",
-        "muscleGroup": [
-          "Ombros",
-          "Peito"
-        ],
-        "description": "Pula pula",
-        "categoryData": {
-          "label": "Musculação",
-          "value": "Musculação"
-        },
-        "category": "Musculação",
-  
-      },,
+    "name": "polichinelo ",
     "sets": 4,
     "repetitions": 12,
     "restTime": 60
@@ -106,7 +89,7 @@ Não adicione explicações ou texto fora do JSON.
       return {
         result: result,
         response: response,
-        exercises: availableExercises,
+        exercises: [],
         // workout: workoutData
       };
 
