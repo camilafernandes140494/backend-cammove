@@ -53,11 +53,9 @@ Cada item do array deve seguir a estrutura:
 
 try {
   const result = await this.gemini.generateContent(prompt);
-  console.timeEnd('Gemini response time');
 
   const response = await result.response;
   const text = await response.text();
-  console.log('Texto gerado:', text);
 
   // Tenta extrair o JSON de dentro do texto
   const jsonMatch = text.match(/\[([\s\S]*?)\]/);
