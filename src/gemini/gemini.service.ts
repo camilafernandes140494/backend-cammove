@@ -19,7 +19,7 @@ export class GeminiService { // Renomeado para GeminiService para clareza
     this.gemini = genAI.getGenerativeModel({ model: process.env.GEMINI_MODEL || 'gemini-pro' });
   }
 
-  async workoutSuggestion({ type, age, gender, nameWorkout, level }: WorkoutSuggestionData): Promise<{}> {
+  async workoutSuggestion({ type, age, gender, nameWorkout, level, muscleGroup,amountExercises }: WorkoutSuggestionData): Promise<{}> {
 
     
 const prompt = `
@@ -31,6 +31,8 @@ Gere um treino de musculação personalizado para um aluno com as seguintes cara
 - Objetivo: ${type}
 - Nome do treino: ${nameWorkout}
 - Nível de experiência: ${level}
+- Grupos musculares: ${muscleGroup.join(', ')}
+- Quantidade de exercícios: ${amountExercises}
 
 Regras:
 - O treino deve ser adequado ao nível do aluno.

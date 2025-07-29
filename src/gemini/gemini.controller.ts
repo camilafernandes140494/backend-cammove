@@ -18,7 +18,6 @@ export class GeminiController {
       @Body() workoutData: WorkoutSuggestionData,
     ) {
      const treino = await this.geminiService.workoutSuggestion(workoutData);
-     console.log(treino)
      return { treino };
     }
 

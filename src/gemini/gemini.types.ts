@@ -4,4 +4,6 @@ export type WorkoutSuggestionData = {
   type: string;
   nameWorkout: string;
   level: string; // Nível do aluno (iniciantes, intermediários, avançados)
+  muscleGroup: string[]; 
+  amountExercises: number
 };
