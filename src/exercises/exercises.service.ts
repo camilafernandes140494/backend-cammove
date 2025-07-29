@@ -47,7 +47,7 @@ export class ExercisesService {
 
     if (filters.name) {
       // Remover normalização para testar com a string exata
-      const filterName = filters.name.toLowerCase(); // Ou use o valor original sem transformação
+      const filterName = filters.name; // Ou use o valor original sem transformação
 
       query = query
         .orderBy('name') // Certifique-se de que o campo 'name' está indexado
