@@ -16,4 +16,6 @@ export type WorkoutData = {
   studentName: string;
   studentId: string;
   nameWorkout: string;
+  level: string; 
+  muscleGroup: string[]; 
 };

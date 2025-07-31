@@ -40,6 +40,8 @@ export class WorkoutsService {
         studentName: workoutData.studentName,
         studentId: workoutData.studentId,
         nameWorkout: workoutData.nameWorkout,
+        level: workoutData.level, 
+        muscleGroup: workoutData.muscleGroup, 
       });
 
       return {
