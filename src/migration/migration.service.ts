@@ -44,24 +44,28 @@ export class MigrationService implements OnModuleInit {
   if (!exercisesMigrationDoc.exists) {
     console.log('Iniciando migração de exercícios...');
     const exercisesSnapshot = await this.firestore.collection('exercises').limit(1).get();
+
     if (exercisesSnapshot.empty) {
-      for (const exercise of initialExercises) {
-        const exercisesRef = this.firestore.collection('exercises').doc();
-        await exercisesRef.set({
-          ...exercise,
-          id: exercisesRef.id,
-          createdAt: admin.firestore.FieldValue.serverTimestamp(),
-          updatedAt: '',
-          deletedAt: '',
-        });
-      }
-      await exercisesMigrationRef.set({
-        appliedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
-      console.log('Migração de exercícios concluída.');
-    } else {
-      console.log('Exercícios já existem, pulando seed.');
-    }
+  const batch = this.firestore.batch();
+
+  for (const exercise of initialExercises) {
+    const exercisesRef = this.firestore.collection('exercises').doc();
+    batch.set(exercisesRef, {
+      ...exercise,
+      id: exercisesRef.id,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: '',
+      deletedAt: '',
+    });
+  }
+
+  await batch.commit();
+  await exercisesMigrationRef.set({
+  appliedAt: admin.firestore.FieldValue.serverTimestamp(),
+});
+  console.log('Exercícios cadastrados via batch.');
+}
+
   } else {
     console.log('Migração de exercícios já foi executada.');
   }
