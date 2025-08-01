@@ -48,9 +48,8 @@ const batch = this.firestore.batch();
 
 initialExercises.forEach((exercise, index) => {
   const exercisesRef = this.firestore.collection('exercises').doc();
-  const customId = `${index + 1}-${exercisesRef.id}`;
+  const customId = `${index + 1}${exercisesRef.id}`;
 
-  console.log(`Preparando exercício #${index + 1}: ${exercise.name} (ID: ${customId})`);
 
   batch.set(this.firestore.collection('exercises').doc(customId), {
     ...exercise,
