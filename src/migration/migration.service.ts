@@ -41,13 +41,10 @@ export class MigrationService implements OnModuleInit {
   const exercisesMigrationRef = this.firestore.collection('migrations').doc('exercises-v1');
   const exercisesMigrationDoc = await exercisesMigrationRef.get();
 
-  if (!exercisesMigrationDoc.exists) {
-    console.log('Iniciando migração de exercícios...');
-    const exercisesSnapshot = await this.firestore.collection('exercises').limit(1).get();
+if (!exercisesMigrationDoc.exists) {
+  console.log('Iniciando migração de exercícios...');
 
-    if (exercisesSnapshot.empty) {
   const batch = this.firestore.batch();
-
   for (const exercise of initialExercises) {
     const exercisesRef = this.firestore.collection('exercises').doc();
     batch.set(exercisesRef, {
@@ -61,14 +58,14 @@ export class MigrationService implements OnModuleInit {
 
   await batch.commit();
   await exercisesMigrationRef.set({
-  appliedAt: admin.firestore.FieldValue.serverTimestamp(),
-});
-  console.log('Exercícios cadastrados via batch.');
+    appliedAt: admin.firestore.FieldValue.serverTimestamp(),
+  });
+
+  console.log('Migração de exercícios concluída.');
+} else {
+  console.log('Migração de exercícios já foi executada.');
 }
 
-  } else {
-    console.log('Migração de exercícios já foi executada.');
-  }
 }
 
 
