@@ -1,6 +1,7 @@
 // src/migration/migration.service.ts
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as admin from 'firebase-admin';
+import { initialExercises } from './exercises.seed';
 
 @Injectable()
 export class MigrationService implements OnModuleInit {
@@ -33,6 +34,18 @@ export class MigrationService implements OnModuleInit {
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
         });
       }
+            for (const exercise of initialExercises) {
+        const exercisesRef = this.firestore
+          .collection('exercises').doc();
+        await exercisesRef.set({
+        ...exercise,
+        id: exercisesRef.id,
+        createdAt: new Date().toISOString(),
+        updatedAt: '',
+        deletedAt: '',
+        });
+      }
+
 
       // Marca a migração como executada
       await migrationRef.set({
