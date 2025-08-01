@@ -45,8 +45,9 @@ if (!exercisesMigrationDoc.exists) {
   console.log('Iniciando migração de exercícios...');
 
   const batch = this.firestore.batch();
+  const exercisesRef = this.firestore.collection('exercises').doc();
+
   for (const exercise of initialExercises) {
-    const exercisesRef = this.firestore.collection('exercises').doc();
     batch.set(exercisesRef, {
       ...exercise,
       id: exercisesRef.id,
@@ -57,6 +58,7 @@ if (!exercisesMigrationDoc.exists) {
   }
 
   await batch.commit();
+  
   await exercisesMigrationRef.set({
     appliedAt: admin.firestore.FieldValue.serverTimestamp(),
   });
