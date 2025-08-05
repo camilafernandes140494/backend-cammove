@@ -25,35 +25,33 @@ export class GeminiService { // Renomeado para GeminiService para clareza
 const prompt = `
 Você é um especialista em educação física.
 
-Gere um treino de musculação personalizado para um aluno com as seguintes características:
+Crie um treino de musculação com base nas seguintes informações:
 - Idade: ${age}
 - Sexo: ${gender}
 - Objetivo: ${type}
 - Nome do treino: ${nameWorkout}
-- Nível de experiência: ${level}
+- Nível: ${level}
 - Grupos musculares: ${Array.isArray(muscleGroup) ? muscleGroup.join(', ') : muscleGroup ? String(muscleGroup) : ''}
 - Quantidade de exercícios: ${amountExercises}
 
 Regras:
-- O treino deve ser adequado ao nível do aluno.
-- Deve conter apenas exercícios compatíveis com academia ou treinos com peso corporal.
-- Use linguagem clara e objetiva.
+- Os exercícios devem ser compatíveis com academia ou peso corporal.
+- Adequados ao nível do aluno.
+- Use linguagem objetiva.
+- Retorne apenas um array JSON puro, sem texto adicional, introdução ou explicação.
 
-Formato de resposta:
-Retorne **apenas um array JSON** com os exercícios, sem explicações extras.
-Não adicione explicações, introduções ou conclusões. Responda apenas com o array JSON diretamente, sem markdown ou texto adicional.
-
-Cada item do array deve seguir a estrutura:
+Formato da resposta:
 [
   {
     "name": "nome do exercício",
     "sets": número de séries (ex: 3),
     "repetitions": número de repetições por série (ex: 12),
-    "category": Grupo muscular principal trabalhado nesse exercício, sempre um array mesmo que contenha um (ex:["Peito"] ou ["Peito", "bíceps"]),
+    "category": ["Peito"],
     "restTime": tempo de descanso entre as séries, em segundos (ex: 60),
-  }
+   }
 ]
 `.trim();
+
 
 try {
   const result = await this.gemini.generateContent(prompt);
