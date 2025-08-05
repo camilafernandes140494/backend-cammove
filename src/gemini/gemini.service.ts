@@ -79,13 +79,14 @@ try {
 
   // Validação simples e ajuste no campo category para garantir que seja array
   exercises = exercises.map((ex: any) => {
-    if (!Array.isArray(ex.category)) {
-      ex.category = ex.category ? [String(ex.category)] : [];
-    }
-    // Garantir que sets, repetitions e restTime sejam números
-    ex.sets = Number(ex.sets) || 0;
-    ex.repetitions = Number(ex.repetitions) || 0;
-    ex.restTime = Number(ex.restTime) || 0;
+  ex.category = Array.isArray(ex.category)
+    ? ex.category
+    : typeof ex.category === 'string'
+      ? [ex.category]
+      : [];
+    ex.sets = ex.sets || '0';
+    ex.repetitions = ex.repetitions || '0';
+    ex.restTime = ex.restTime || '0';
     return ex;
   });
 
