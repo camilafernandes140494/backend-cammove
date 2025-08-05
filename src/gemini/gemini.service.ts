@@ -57,23 +57,45 @@ Cada item do array deve seguir a estrutura:
 
 try {
   const result = await this.gemini.generateContent(prompt);
-
   const response = await result.response;
   const text = await response.text();
 
-  // Tenta extrair o JSON de dentro do texto
-  const jsonMatch = text.match(/\[([\s\S]*?)\]/);
-  if (!jsonMatch) {
-    throw new Error('JSON não encontrado na resposta');
+  // Extrair o primeiro array JSON completo da resposta
+  const firstBracket = text.indexOf('[');
+  const lastBracket = text.lastIndexOf(']');
+
+  if (firstBracket === -1 || lastBracket === -1) {
+    console.warn('JSON não encontrado na resposta, retornando texto bruto');
+    return { rawText: text };
   }
 
-  const jsonText = `[${jsonMatch[1]}]`;
-  const exercises = JSON.parse(jsonText);
+  const jsonText = text.slice(firstBracket, lastBracket + 1);
+
+  let exercises;
+  try {
+    exercises = JSON.parse(jsonText);
+  } catch (parseError) {
+    console.warn('Erro ao fazer parse do JSON, retornando texto bruto:', parseError);
+    return { rawText: text };
+  }
+
+  // Validação simples e ajuste no campo category para garantir que seja array
+  exercises = exercises.map((ex: any) => {
+    if (!Array.isArray(ex.category)) {
+      ex.category = ex.category ? [String(ex.category)] : [];
+    }
+    // Garantir que sets, repetitions e restTime sejam números
+    ex.sets = Number(ex.sets) || 0;
+    ex.repetitions = Number(ex.repetitions) || 0;
+    ex.restTime = Number(ex.restTime) || 0;
+    return ex;
+  });
 
   return { exercises };
 } catch (err) {
   console.error('Erro ao chamar Gemini:', err);
   throw new InternalServerErrorException('Erro ao se comunicar com Gemini');
 }
+
 
   }}
