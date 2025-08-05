@@ -31,7 +31,7 @@ Gere um treino de musculação personalizado para um aluno com as seguintes cara
 - Objetivo: ${type}
 - Nome do treino: ${nameWorkout}
 - Nível de experiência: ${level}
-- Grupos musculares: ${muscleGroup.join(', ')}
+- Grupos musculares: ${Array.isArray(muscleGroup) ? muscleGroup.join(', ') : muscleGroup ? String(muscleGroup) : ''}
 - Quantidade de exercícios: ${amountExercises}
 
 Regras:
@@ -57,34 +57,23 @@ Cada item do array deve seguir a estrutura:
 
 try {
   const result = await this.gemini.generateContent(prompt);
+
   const response = await result.response;
   const text = await response.text();
 
   // Tenta extrair o JSON de dentro do texto
-  const firstBracket = text.indexOf('[');
-  const lastBracket = text.lastIndexOf(']');
-
-  if (firstBracket === -1 || lastBracket === -1) {
-    console.warn('JSON não encontrado na resposta, retornando texto bruto');
-    return { rawText: text };
+  const jsonMatch = text.match(/\[([\s\S]*?)\]/);
+  if (!jsonMatch) {
+    throw new Error('JSON não encontrado na resposta');
   }
 
-  const jsonText = text.slice(firstBracket, lastBracket + 1);
-
-  let exercises;
-
-  try {
-    exercises = JSON.parse(jsonText);
-  } catch (parseErr) {
-    console.warn('Erro ao fazer parse do JSON, retornando texto bruto:', parseErr);
-    return { rawText: text };
-  }
+  const jsonText = `[${jsonMatch[1]}]`;
+  const exercises = JSON.parse(jsonText);
 
   return { exercises };
 } catch (err) {
   console.error('Erro ao chamar Gemini:', err);
   throw new InternalServerErrorException('Erro ao se comunicar com Gemini');
 }
-
 
   }}
