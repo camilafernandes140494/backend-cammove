@@ -48,8 +48,8 @@ Cada item do array deve seguir a estrutura:
     "name": "nome do exercício",
     "sets": número de séries (ex: 3),
     "repetitions": número de repetições por série (ex: 12),
+    "category": Grupo muscular principal trabalhado nesse exercício (ex: Peito, bíceps),
     "restTime": tempo de descanso entre as séries, em segundos (ex: 60),
-    "category": Grupo muscular principal trabalhado nesse exercício
   }
 ]
 `.trim();
