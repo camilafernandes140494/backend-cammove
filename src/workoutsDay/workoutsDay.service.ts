@@ -41,9 +41,9 @@ export class WorkoutsDayService {
 }
 
 
-async getTrainingDays(
-  studentId: string
-): Promise<{ [date: string]: { nameWorkout: string; type?: string } }> {
+async getTrainingDays(studentId: string): Promise<
+  { date: string; nameWorkout: string; type?: string }[]
+> {
   try {
     const snapshot = await this.firestore
       .collection('workoutsDay')
@@ -52,22 +52,21 @@ async getTrainingDays(
       .get();
 
     if (snapshot.empty) {
-      return {};
+      return [];
     }
 
-    const result: { [date: string]: { nameWorkout: string; type?: string } } = {};
-    snapshot.forEach((doc) => {
+    return snapshot.docs.map((doc) => {
       const data = doc.data();
-      result[doc.id] = {
+      return {
+        date: doc.id,
         nameWorkout: data.nameWorkout,
         type: data.type,
       };
     });
-
-    return result;
   } catch (error) {
     throw new Error('Erro ao buscar dias de treino: ' + error.message);
   }
 }
+
 
 }
