@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Get,
+  Body,
 } from '@nestjs/common';
 
 import { WorkoutsDayService } from './workoutsDay.service';
@@ -15,8 +16,10 @@ export class WorkoutsDayController {
 
   // Endpoint para criar um review
   @Post('students/:studentId')
-  async logTrainingDay(@Param('studentId') studentId: string) {
-    return this.workoutsDayService.logTrainingDay(studentId);
+  async logTrainingDay(
+  @Param('studentId') studentId: string,  
+  @Body() workout: { nameWorkout: string; type?: string }) {
+    return this.workoutsDayService.logTrainingDay(studentId, workout);
   }
 
   // Endpoint para listar todos os reviews de um professor
