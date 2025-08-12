@@ -40,6 +40,10 @@ export class UsersService {
     }
   }
 
+    async saveDeviceToken(id: string, deviceToken: string): Promise<any> {
+    return this.updateUser(id, { deviceToken });
+  }
+
   // Método para soft delete de um usuário
   async softDeleteUser(id: string): Promise<any> {
     try {

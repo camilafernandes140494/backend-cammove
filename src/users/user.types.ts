@@ -13,6 +13,7 @@ export type User = {
   email: string;
   status: 'ACTIVE' | 'INACTIVE' | null;
   phone: string;
+  deviceToken?: string
 };
 
 export type UpdateUser = Partial<User>;

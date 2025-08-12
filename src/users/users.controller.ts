@@ -112,6 +112,14 @@ export class UsersController {
     return this.usersService.softDeleteUser(id);
   }
 
+   @Post(':id/device-token')
+  async saveDeviceToken(
+    @Param('id') id: string,
+    @Body('deviceToken') deviceToken: string
+  ) {
+    return this.usersService.saveDeviceToken(id, deviceToken);
+  }
+
   @Patch(':id/restore')
   @HttpCode(HttpStatus.OK)
   async restoreUser(@Param('id') id: string) {
@@ -151,4 +159,6 @@ export class UsersController {
       throw error;
     }
   }
+
+
 }
