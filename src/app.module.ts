@@ -29,6 +29,8 @@ import { OpenAiService } from './openai/openai.service';
 import { OpenAiController } from './openai/openai.controller';
 import { GeminiService } from './gemini/gemini.service';
 import { GeminiController } from './gemini/gemini.controller';
+import { NotificationsService } from './notifications/notifications.service';
+import { NotificationsController } from './notifications/notifications.controller';
 
 @Module({
   imports: [],
@@ -46,7 +48,8 @@ import { GeminiController } from './gemini/gemini.controller';
     ScheduleController,
     S3Controller,
     OpenAiController,
-    GeminiController
+    GeminiController,
+    NotificationsController
   ],
   providers: [
     AuthService,
@@ -63,7 +66,8 @@ import { GeminiController } from './gemini/gemini.controller';
     ScheduleService,
     S3Service,
     OpenAiService,
-    GeminiService
+    GeminiService,
+    NotificationsService
   ],
 })
 export class AppModule {}
