@@ -7,7 +7,7 @@ export class NotificationsController {
 
   @Post('send')
   async sendNotification(
-    @Body() body: { token: string; title: string; message: string },
+    @Body() body: { token: string[]; title: string; message: string },
   ) {
     const { token, title, message } = body;
 

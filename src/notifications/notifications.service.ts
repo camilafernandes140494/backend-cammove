@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
 
-  async sendPushNotification(expoPushToken: string, title: string, body: string, data?: any) {
+  async sendPushNotification(expoPushToken: string[], title: string, body: string, data?: any) {
     const message = {
       to: expoPushToken,
       sound: 'default',
