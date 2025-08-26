@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
-import * as fs from 'fs';
+import { Readable } from 'stream';
 
 @Injectable()
 export class YoutubeService {
@@ -18,26 +18,20 @@ export class YoutubeService {
     });
   }
 
-  async uploadVideo(filePath: string, title: string, description: string): Promise<string> {
-    const youtube = google.youtube({
-      version: 'v3',
-      auth: this.oAuth2Client,
-    });
+  async uploadVideoBuffer(
+    fileBuffer: Buffer,
+    title: string,
+    description: string,
+  ): Promise<string> {
+    const youtube = google.youtube({ version: 'v3', auth: this.oAuth2Client });
 
     const res = await youtube.videos.insert({
       part: ['snippet', 'status'],
       requestBody: {
-        snippet: {
-          title,
-          description,
-        },
-        status: {
-          privacyStatus: 'unlisted', // public | private | unlisted
-        },
+        snippet: { title, description },
+        status: { privacyStatus: 'unlisted' },
       },
-      media: {
-        body: fs.createReadStream(filePath),
-      },
+      media: { body: Readable.from(fileBuffer) },
     });
 
     return `https://www.youtube.com/watch?v=${res.data.id}`;
