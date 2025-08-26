@@ -18,10 +18,11 @@ export class YoutubeService {
     });
   }
 
-  async uploadVideo(filePath: string, title: string, description: string) {
-    const youtube = google.youtube({ version: 'v3', auth: this.oAuth2Client });
-
-    const fileSize = fs.statSync(filePath).size;
+  async uploadVideo(filePath: string, title: string, description: string): Promise<string> {
+    const youtube = google.youtube({
+      version: 'v3',
+      auth: this.oAuth2Client,
+    });
 
     const res = await youtube.videos.insert({
       part: ['snippet', 'status'],
@@ -29,8 +30,6 @@ export class YoutubeService {
         snippet: {
           title,
           description,
-          tags: ['personal trainer', 'treino', 'exercicio'],
-          categoryId: '17', // "Sports"
         },
         status: {
           privacyStatus: 'unlisted', // public | private | unlisted
@@ -39,14 +38,8 @@ export class YoutubeService {
       media: {
         body: fs.createReadStream(filePath),
       },
-    }, {
-      // opção recomendada para vídeos grandes
-      onUploadProgress: evt => {
-        const progress = (evt.bytesRead / fileSize) * 100;
-        console.log(`${Math.round(progress)}% concluído`);
-      },
     });
 
-    return res.data.id; // videoId do YouTube
+    return `https://www.youtube.com/watch?v=${res.data.id}`;
   }
 }
