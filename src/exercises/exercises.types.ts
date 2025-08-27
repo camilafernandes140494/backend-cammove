@@ -4,6 +4,7 @@ export type Exercise = {
   category: string;
   muscleGroup: string[];
   images: string[];
+  video?: string;
   createdAt: string;
   updatedAt?: string;
   deletedAt?: string;
