@@ -1,5 +1,6 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, HttpCode, HttpStatus } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
+import { NotificationsDataTypes } from './notifications.types';
 
 @Controller('notifications')
 export class NotificationsController {
@@ -13,4 +14,26 @@ export class NotificationsController {
 
     return this.notificationsService.sendPushNotification(token, title, message);
   }
+
+     @Post(':id')
+    async sendNotificationType(
+      @Param('id') id: string,
+       @Body() body: NotificationsDataTypes,
+
+    ) {
+      return this.notificationsService.sendPushNotificationType(id, body);
+    }
+
+      @Get(':id')
+      @HttpCode(HttpStatus.OK)
+      async getNotifications(@Param('id') id: string) {
+        try {
+          return await this.notificationsService.getNotifications(id);
+        } catch (error) {
+          console.error('Erro ao buscar usuário: ', error);
+          throw error;
+        }
+      }
+    
 }
+
