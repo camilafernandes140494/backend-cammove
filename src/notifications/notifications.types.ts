@@ -1,7 +1,7 @@
 
 export type NotificationsDataTypes = {
-  exercise: boolean;
+  assessments: boolean;
   workout: boolean;
   schedule: boolean;
- 
+
 };
