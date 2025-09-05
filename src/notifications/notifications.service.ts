@@ -2,11 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import fetch from 'node-fetch';
 import admin from 'src/firebase/firebase.config';
 import { NotificationsDataTypes } from './notifications.types';
+import { NotificationsGateway } from './notifications.gateway';
 
 @Injectable()
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
     private firestore = admin.firestore();
+  constructor(private notificationsGateway: NotificationsGateway) {}
 
   async sendPushNotification(expoPushToken: string[], title: string, body: string, data?: any) {
     const message = {
@@ -83,29 +85,28 @@ export class NotificationsService {
     }
   }
 
-    async getNotifications(id: string) {
-    try {
-      const snapshot = await this.firestore
-        .collection('notifications')
-        .doc(id)
-        .collection('notificationsData')
-        .get();
+async getNotifications(id: string) {
+  const snapshot = await this.firestore
+    .collection('notifications')
+    .doc(id)
+    .collection('notificationsData')
+    .get();
 
-      if (snapshot.empty) {
-        return {
-          message: 'Nenhuma notificação encontrada.',
-        };
-      }
-      const notifications = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+  const notifications = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-      return notifications;
-    } catch (error) {
-      throw new Error('Erro ao buscar agendamentos: ' + error.message);
-    }
-  }
+  // iniciar escuta em tempo real
+  this.firestore
+    .collection('notifications')
+    .doc(id)
+    .collection('notificationsData')
+    .onSnapshot((snap) => {
+      const updatedNotifications = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      this.notificationsGateway.sendNotification(id, updatedNotifications);
+    });
+
+  return notifications; // dados iniciais via REST
+}
+
 
 }
 
