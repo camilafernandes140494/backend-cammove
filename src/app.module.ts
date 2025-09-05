@@ -31,8 +31,7 @@ import { GeminiService } from './gemini/gemini.service';
 import { GeminiController } from './gemini/gemini.controller';
 import { NotificationsService } from './notifications/notifications.service';
 import { NotificationsController } from './notifications/notifications.controller';
-import { YoutubeService } from './youtube/youtube.service';
-import { YoutubeController } from './youtube/youtube.controller';
+import { NotificationsGateway } from './notifications/notifications.gateway';
 
 @Module({
   imports: [],
@@ -52,7 +51,6 @@ import { YoutubeController } from './youtube/youtube.controller';
     OpenAiController,
     GeminiController,
     NotificationsController,
-    YoutubeController
   ],
   providers: [
     AuthService,
@@ -71,7 +69,7 @@ import { YoutubeController } from './youtube/youtube.controller';
     OpenAiService,
     GeminiService,
     NotificationsService,
-    YoutubeService
+    NotificationsGateway,
   ],
 })
 export class AppModule {}
