@@ -8,7 +8,25 @@ import { NotificationsGateway } from './notifications.gateway';
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
     private firestore = admin.firestore();
-  constructor(private notificationsGateway: NotificationsGateway) {}
+
+  constructor(private notificationsGateway: NotificationsGateway) {
+    this.initRealtimeListeners();
+  }
+
+  private initRealtimeListeners() {
+    this.firestore
+      .collection('notifications')
+      .onSnapshot(snapshot => {
+        snapshot.docs.forEach(async doc => {
+          const id = doc.id;
+          const notificationsSnapshot = await doc.ref.collection('notificationsData').get();
+          const notifications = notificationsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+          this.notificationsGateway.sendNotification(id, notifications);
+        });
+      }, error => {
+        this.logger.error('Error on Firestore snapshot listener', error);
+      });
+  }
 
   async sendPushNotification(expoPushToken: string[], title: string, body: string, data?: any) {
     const message = {
@@ -85,27 +103,29 @@ export class NotificationsService {
     }
   }
 
-async getNotifications(id: string) {
-  const snapshot = await this.firestore
-    .collection('notifications')
-    .doc(id)
-    .collection('notificationsData')
-    .get();
+    async getNotifications(id: string) {
+    try {
+      const snapshot = await this.firestore
+        .collection('notifications')
+        .doc(id)
+        .collection('notificationsData')
+        .get();
 
-  const notifications = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      if (snapshot.empty) {
+        return {
+          message: 'Nenhuma notificação encontrada.',
+        };
+      }
+      const notifications = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
 
-  // iniciar escuta em tempo real
-  this.firestore
-    .collection('notifications')
-    .doc(id)
-    .collection('notificationsData')
-    .onSnapshot((snap) => {
-      const updatedNotifications = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      this.notificationsGateway.sendNotification(id, updatedNotifications);
-    });
-
-  return notifications; // dados iniciais via REST
-}
+      return notifications;
+    } catch (error) {
+      throw new Error('Erro ao buscar agendamentos: ' + error.message);
+    }
+  }
 
 
 }
