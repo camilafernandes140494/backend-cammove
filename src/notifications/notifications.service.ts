@@ -61,6 +61,28 @@ export class NotificationsService {
     }
   }
 
+      async putPushNotificationType(id: string, idNotification: string,body: NotificationsDataTypes, ) {
+
+    try {
+      const notificationsDocRef = this.firestore
+        .collection('notifications')
+        .doc(id)
+        .collection('notificationsData')
+        .doc(idNotification);
+
+    await notificationsDocRef.set(body, { merge: true }); // merge: true mantém os campos que não foram enviados
+
+
+      return {
+        message: 'Notificação atualizada com sucesso',
+      };
+
+    } catch (error) {
+      this.logger.error(`Error sending push notification: ${error.message}`, error.stack);
+      throw error;
+    }
+  }
+
     async getNotifications(id: string) {
     try {
       const snapshot = await this.firestore

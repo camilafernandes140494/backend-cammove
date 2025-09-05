@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Get, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Param, Get, HttpCode, HttpStatus, Patch } from '@nestjs/common';
 import { NotificationsService } from './notifications.service';
 import { NotificationsDataTypes } from './notifications.types';
 
@@ -22,6 +22,18 @@ export class NotificationsController {
 
     ) {
       return this.notificationsService.sendPushNotificationType(id, body);
+    }
+
+
+
+    @Patch(':id/:idNotification')
+    async putPushNotificationType(
+      @Param('id') id: string,
+      @Param('idNotification') idNotification: string,
+       @Body() body: NotificationsDataTypes,
+
+    ) {
+      return this.notificationsService.putPushNotificationType(id,idNotification, body);
     }
 
       @Get(':id')
