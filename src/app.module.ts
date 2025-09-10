@@ -32,6 +32,8 @@ import { GeminiController } from './gemini/gemini.controller';
 import { NotificationsService } from './notifications/notifications.service';
 import { NotificationsController } from './notifications/notifications.controller';
 import { NotificationsGateway } from './notifications/notifications.gateway';
+import { TermsOfUseService } from './termsOfUse/termsOfUse.service';
+import { TermsOfUseController } from './termsOfUse/termsOfUse.controller';
 
 @Module({
   imports: [],
@@ -51,6 +53,7 @@ import { NotificationsGateway } from './notifications/notifications.gateway';
     OpenAiController,
     GeminiController,
     NotificationsController,
+    TermsOfUseController
   ],
   providers: [
     AuthService,
@@ -70,6 +73,7 @@ import { NotificationsGateway } from './notifications/notifications.gateway';
     GeminiService,
     NotificationsService,
     NotificationsGateway,
+    TermsOfUseService
   ],
 })
 export class AppModule {}

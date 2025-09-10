@@ -2,31 +2,31 @@ import { Injectable, Logger } from '@nestjs/common';
 import fetch from 'node-fetch';
 import admin from 'src/firebase/firebase.config';
 import { NotificationsDataTypes } from './notifications.types';
-import { NotificationsGateway } from './notifications.gateway';
 
 @Injectable()
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
     private firestore = admin.firestore();
 
-  constructor(private notificationsGateway: NotificationsGateway) {
-    this.initRealtimeListeners();
-  }
+  // Não foi possivel utilizar o websocket, pois o vercel nao suporta websocket
+  // constructor(private notificationsGateway: NotificationsGateway) {
+  //   this.initRealtimeListeners();
+  // }
 
-  private initRealtimeListeners() {
-    this.firestore
-      .collection('notifications')
-      .onSnapshot(snapshot => {
-        snapshot.docs.forEach(async doc => {
-          const id = doc.id;
-          const notificationsSnapshot = await doc.ref.collection('notificationsData').get();
-          const notifications = notificationsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-          this.notificationsGateway.sendNotification(id, notifications);
-        });
-      }, error => {
-        this.logger.error('Error on Firestore snapshot listener', error);
-      });
-  }
+  // private initRealtimeListeners() {
+  //   this.firestore
+  //     .collection('notifications')
+  //     .onSnapshot(snapshot => {
+  //       snapshot.docs.forEach(async doc => {
+  //         const id = doc.id;
+  //         const notificationsSnapshot = await doc.ref.collection('notificationsData').get();
+  //         const notifications = notificationsSnapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  //         this.notificationsGateway.sendNotification(id, notifications);
+  //       });
+  //     }, error => {
+  //       this.logger.error('Error on Firestore snapshot listener', error);
+  //     });
+  // }
 
   async sendPushNotification(expoPushToken: string[], title: string, body: string, data?: any) {
     const message = {

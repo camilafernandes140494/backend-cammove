@@ -14,6 +14,7 @@ export type User = {
   status: 'ACTIVE' | 'INACTIVE' | null;
   phone: string;
   deviceToken?: string
+  termsOfUse?: string
 };
 
 export type UpdateUser = Partial<User>;
