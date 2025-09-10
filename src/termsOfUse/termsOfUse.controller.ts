@@ -16,6 +16,6 @@ export class TermsOfUseController {
   @Get()
   @HttpCode(HttpStatus.OK)
   async getActiveTermsOfUse() {
-    return this.termsOfUseService.getActiveTermsOfUse();
+    return this.termsOfUseService.getAllTermsOfUse();
   }
 }
