@@ -7,21 +7,24 @@ export class TermsOfUseService {
 
   async getActiveTermsOfUse(): Promise<TermsOfUse | null> {
     try {
+      // pega todos os documentos da coleção
       const snapshot = await this.firestore
         .collection('terms_of_use')
-        .where('isActive', '==', true)
-        .limit(1) // só deve existir um ativo
         .get();
 
       if (snapshot.empty) {
-        return null; // ou pode lançar um erro
+        return null; // nenhum termo cadastrado
       }
 
-      const doc = snapshot.docs[0];
-      const data = doc.data();
+      // filtra manualmente o que tem isActive == true
+      const activeDoc = snapshot.docs.find(doc => doc.data().isActive === true);
+
+      if (!activeDoc) return null; // nenhum ativo
+
+      const data = activeDoc.data();
 
       return {
-        id: doc.id,
+        id: activeDoc.id,
         content: data.content,
         createdAt: data.createdAt,
         isActive: data.isActive,
