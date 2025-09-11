@@ -3,8 +3,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Get,
-  Post,
+  Get, Put
 } from '@nestjs/common';
 import { TermsOfUseService } from './termsOfUse.service';
 
@@ -25,9 +24,9 @@ export class TermsOfUseController {
   async getAllTermsOfUse() {
     return this.termsOfUseService.getAllTermsOfUse();
   }
-  @Post()
+  @Put()
   @HttpCode(HttpStatus.OK)
-  async createTermsOfUse() {
-    return this.termsOfUseService.createTermsOfUse();
+  async updateTermsOfUse() {
+    return this.termsOfUseService.updateTermsOfUse();
   }
 }

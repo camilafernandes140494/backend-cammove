@@ -2,6 +2,9 @@
 import admin from 'src/firebase/firebase.config';
 import { TermsOfUse } from './termsOfUse.types';
 
+const termsJson = require('./termsOfUse.json');
+
+
 export class TermsOfUseService {
   private firestore = admin.firestore();
 
@@ -59,21 +62,20 @@ async getActiveTermsOfUse(): Promise<TermsOfUse | null> {
     }
   }
 
-  async createTermsOfUse(): Promise<any> {
-  const termsJson = require('./termsOfUse.json');
+async updateTermsOfUse(): Promise<any> {
+  try {
+    const docRef = this.firestore.collection('terms_of_use').doc('v-1.0.0'); 
 
-    try {
-    const docRef = this.firestore.collection('terms_of_use').doc('v-1.0.0')
-    await docRef.update({
+    await docRef.set({
       ...termsJson,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(), // atualiza timestamp
+    }, { merge: true }); // merge garante que só atualiza os campos existentes, sem sobrescrever todo o doc
 
-      createdAt: new Date().toISOString(),
-      deletedAt: '',
-    });
-  return { message: 'Termo de uso cadastrado com sucesso', id: 'v-1.0.0' };
+    return { message: 'Termo de uso atualizado com sucesso', id: docRef.id };
   } catch (error) {
-    throw new Error('Erro ao criar termo de uso: ' + (error as Error).message);
+    throw new Error('Erro ao atualizar termo de uso: ' + (error as Error).message);
   }
 }
+
 
 }
