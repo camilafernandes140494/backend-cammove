@@ -1,0 +1,101 @@
+{
+  "title": "📄 Termos de Uso",
+  "intro": [
+    "Bem-vindo(a) ao CamMove!",
+    "Estes Termos de Uso regulam o uso da plataforma por Professores e Alunos."
+  ],
+  "sections": [
+    {
+      "title": "⚖️ Seção Geral",
+      "content": [
+        "É obrigatório fornecer informações verdadeiras e atualizadas ao criar a conta.",
+        "Cada usuário é responsável por manter a confidencialidade de seus dados de acesso (login e senha).",
+        "Professores devem cadastrar corretamente seus alunos e gerenciar informações disponibilizadas.",
+        "O usuário deve informar imediatamente caso perceba uso não autorizado de sua conta."
+      ]
+    },
+    {
+      "title": "🛡 Coleta e Uso de Dados (LGPD)",
+      "content": [
+        "Coletamos e-mail e telefone para cadastro, notificações e envio de avaliações físicas.",
+        "Dados são utilizados apenas para fins relacionados ao funcionamento da plataforma.",
+        "O acesso aos dados é restrito: professores só veem os dados de seus alunos; alunos só veem seus próprios dados.",
+        "O usuário pode solicitar correção ou exclusão de seus dados a qualquer momento.",
+        "Para mais informações, consulte nossa Política de Privacidade."
+      ]
+    },
+    {
+      "title": "👨‍🏫 Professores",
+      "content": [
+        "Criar, editar, visualizar e excluir treinos, avaliações físicas, exercícios, agendamentos e alunos.",
+        "Envio automático de notificações e e-mails relacionados às avaliações físicas e agendamentos."
+      ]
+    },
+    {
+      "title": "🏋️ Alunos",
+      "content": [
+        "Visualizar e avaliar treinos.",
+        "Visualizar avaliações físicas.",
+        "Visualizar agendamentos e inscrever-se em atividades de interesse.",
+        "Receber notificações e e-mails enviados pelo professor."
+      ]
+    },
+    {
+      "title": "📌 Responsabilidades do Usuário",
+      "content": [
+        "Utilizar a plataforma de forma ética e legal, sem prejudicar terceiros.",
+        "Não compartilhar dados de login ou informações de outros usuários.",
+        "Professores são responsáveis pela veracidade e atualização das informações cadastradas.",
+        "Alunos são responsáveis pelo uso correto das informações disponíveis."
+      ]
+    },
+    {
+      "title": "⚠️ Limitação de Responsabilidade",
+      "content": [
+        "O CamMove atua apenas como ferramenta de gestão e acompanhamento; não substitui orientação médica ou diagnóstico profissional.",
+        "O uso das informações fornecidas é de responsabilidade exclusiva do professor e do aluno.",
+        "A plataforma não se responsabiliza por danos decorrentes de uso indevido ou não autorizado do app."
+      ]
+    },
+    {
+      "title": "🔔 Notificações e E-mails",
+      "content": [
+        "A plataforma pode enviar notificações push e e-mails automáticos relacionados a treinos, avaliações e agendamentos.",
+        "O usuário pode gerenciar suas preferências de notificações no dispositivo."
+      ]
+    },
+    {
+      "title": "✏️ Alterações nos Termos",
+      "content": [
+        "Estes Termos de Uso podem ser alterados a qualquer momento.",
+        "Alterações relevantes serão comunicadas por e-mail ou pelo app.",
+        "O uso contínuo da plataforma após atualização significa aceitação dos novos termos."
+      ]
+    },
+    {
+      "title": "📸 Uso de Imagem e Conteúdo do Usuário",
+      "content": [
+        "Professores e alunos podem enviar fotos ou imagens relacionadas ao treino e avaliação física.",
+        "Ao enviar imagens, o usuário autoriza o CamMove a utilizá-las em materiais de divulgação, publicidade e campanhas de marketing.",
+        "O CamMove não se responsabiliza por imagens inadequadas ou que violem direitos de terceiros.",
+        "Os usuários devem garantir que têm direito de compartilhar as imagens.",
+        "Conteúdo inadequado, ofensivo ou ilegal deve ser reportado."
+      ]
+    },
+    {
+      "title": "❌ Encerramento de Conta",
+      "content": [
+        "O usuário pode solicitar encerramento de sua conta a qualquer momento.",
+        "O CamMove pode suspender ou excluir contas que violem estes Termos de Uso."
+      ]
+    },
+    {
+      "title": "📬 Contato",
+      "content": [
+        "Em caso de dúvidas, entre em contato pelo e-mail: app.cammove@gmail.com"
+      ]
+    }
+  ],
+  "isActive": true,
+  "createdAt": "2025-09-11T23:00:00Z"
+}

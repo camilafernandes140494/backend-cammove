@@ -59,4 +59,21 @@ async getActiveTermsOfUse(): Promise<TermsOfUse | null> {
     }
   }
 
+  async createTermsOfUse(): Promise<any> {
+  const termsJson = require('./termsOfUse.json');
+
+    try {
+    const docRef = this.firestore.collection('terms_of_use').doc('v-1.0.0')
+    await docRef.update({
+      ...termsJson,
+
+      createdAt: new Date().toISOString(),
+      deletedAt: '',
+    });
+  return { message: 'Termo de uso cadastrado com sucesso', id: 'v-1.0.0' };
+  } catch (error) {
+    throw new Error('Erro ao criar termo de uso: ' + (error as Error).message);
+  }
+}
+
 }
