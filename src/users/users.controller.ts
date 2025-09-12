@@ -57,6 +57,7 @@ export class UsersController {
       email,
       phone,
       status = 'ACTIVE',
+      termsOfUse
     } = body;
 
     return this.usersService.createUser(id, {
@@ -71,6 +72,7 @@ export class UsersController {
       deletedAt,
       status,
       phone,
+      termsOfUse
     });
   }
 
@@ -86,7 +88,7 @@ export class UsersController {
       const updatedAt = new Date().toISOString();
 
       // Certifique-se de não enviar campos undefined
-      const { name, gender, birthDate, permission, image, status, phone } =
+      const { name, gender, birthDate, permission, image, status, phone, termsOfUse } =
         body;
       const updateData = {
         ...(name && { name }),
@@ -96,6 +98,7 @@ export class UsersController {
         ...(image && { image }),
         ...(status && { status }),
         ...(status && { phone }),
+        ...(termsOfUse && { termsOfUse }),
         updatedAt,
       };
 
