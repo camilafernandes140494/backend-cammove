@@ -57,7 +57,6 @@ export class UsersController {
       email,
       phone,
       status = 'ACTIVE',
-      termsOfUse
     } = body;
 
     return this.usersService.createUser(id, {
@@ -72,7 +71,6 @@ export class UsersController {
       deletedAt,
       status,
       phone,
-      termsOfUse
     });
   }
 
