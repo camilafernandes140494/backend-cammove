@@ -67,7 +67,9 @@ async updateTermsOfUse(): Promise<any> {
     const docRef = this.firestore.collection('terms_of_use').doc('v-1.0.0'); 
 
     await docRef.set({
-      ...termsJson,
+      content: termsJson,  
+      isActive: true,
+      version: 'v1.0.0',
       createdAt: admin.firestore.FieldValue.serverTimestamp(), // atualiza timestamp
     }, { merge: true }); // merge garante que só atualiza os campos existentes, sem sobrescrever todo o doc
 
