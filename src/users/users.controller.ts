@@ -95,7 +95,7 @@ export class UsersController {
         ...(permission && { permission }),
         ...(image && { image }),
         ...(status && { status }),
-        ...(status && { phone }),
+        ...(phone && { phone }),
         ...(termsOfUse && { termsOfUse }),
         updatedAt,
       };
