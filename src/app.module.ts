@@ -34,6 +34,7 @@ import { NotificationsController } from './notifications/notifications.controlle
 import { NotificationsGateway } from './notifications/notifications.gateway';
 import { TermsOfUseService } from './termsOfUse/termsOfUse.service';
 import { TermsOfUseController } from './termsOfUse/termsOfUse.controller';
+import { AuthGuard } from './auth/auth.guard';
 
 @Module({
   imports: [],
@@ -73,7 +74,8 @@ import { TermsOfUseController } from './termsOfUse/termsOfUse.controller';
     GeminiService,
     NotificationsService,
     NotificationsGateway,
-    TermsOfUseService
+    TermsOfUseService,
+    AuthGuard
   ],
 })
 export class AppModule {}
