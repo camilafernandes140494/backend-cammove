@@ -3,9 +3,11 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
-  Get, Put
+  Get, Put,
+  UseGuards
 } from '@nestjs/common';
 import { TermsOfUseService } from './termsOfUse.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('terms-of-use')
 export class TermsOfUseController {
@@ -13,17 +15,21 @@ export class TermsOfUseController {
     private readonly termsOfUseService: TermsOfUseService,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Get()
   @HttpCode(HttpStatus.OK)
   async getActiveTermsOfUse() {
     return this.termsOfUseService.getActiveTermsOfUse();
   }
 
+  @UseGuards(AuthGuard)
   @Get("all")
   @HttpCode(HttpStatus.OK)
   async getAllTermsOfUse() {
     return this.termsOfUseService.getAllTermsOfUse();
   }
+
+  @UseGuards(AuthGuard)
   @Put()
   @HttpCode(HttpStatus.OK)
   async updateTermsOfUse() {
