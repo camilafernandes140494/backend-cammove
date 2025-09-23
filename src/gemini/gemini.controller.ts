@@ -1,12 +1,14 @@
 import {
   Body,
   Controller, HttpCode,
-  HttpStatus, Post
+  HttpStatus, Post,
+  UseGuards
 } from '@nestjs/common';
 import { GeminiService } from './gemini.service';
 import { WorkoutSuggestionData } from './gemini.types';
+import { AuthGuard } from 'src/auth/auth.guard';
 
-
+@UseGuards(AuthGuard)
 @Controller('gemini')
 
 export class GeminiController {

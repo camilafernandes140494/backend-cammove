@@ -8,13 +8,16 @@ import {
   Param,
   Get,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User, UpdateUser } from './user.types'; // Importando o tipo User e UpdateUserDto
 import { PermissionType } from 'src/permission/permission.types';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard } from 'src/auth/auth.guard';
 // import * as bcrypt from 'bcrypt';
 
+@UseGuards(AuthGuard)
 @Controller('users')
 @ApiTags('users')
 export class UsersController {

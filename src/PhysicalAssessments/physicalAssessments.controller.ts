@@ -8,9 +8,13 @@ import {
   Patch,
   Delete,
   Get,
+  UseGuards,
 } from '@nestjs/common';
 import { PhysicalAssessmentsService } from './physicalAssessments.service';
 import { PhysicalAssessmentData } from './physicalAssessments.types';
+import { AuthGuard } from 'src/auth/auth.guard';
+
+@UseGuards(AuthGuard)
 @Controller('physical-assessment')
 export class PhysicalAssessmentsController {
   constructor(

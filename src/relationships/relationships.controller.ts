@@ -8,9 +8,12 @@ import {
   Body,
   Get,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { RelationshipsService } from './relationships.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('relationships')
 export class RelationshipsController {
   constructor(private readonly assignUsersService: RelationshipsService) {}

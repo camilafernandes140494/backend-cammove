@@ -1,11 +1,14 @@
 import {
   Body,
   Controller, HttpCode,
-  HttpStatus, Post
+  HttpStatus, Post,
+  UseGuards
 } from '@nestjs/common';
 import { OpenAiService } from './openai.service';
 import { WorkoutSuggestionData } from './openai.types';
+import { AuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('ai')
 
 export class OpenAiController {

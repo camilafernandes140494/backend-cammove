@@ -6,10 +6,13 @@ import {
   Param,
   Get,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 
 import { WorkoutsDayService } from './workoutsDay.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('workouts-day')
 export class WorkoutsDayController {
   constructor(private readonly workoutsDayService: WorkoutsDayService) {}

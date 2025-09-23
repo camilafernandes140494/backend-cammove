@@ -1,5 +1,6 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards } from '@nestjs/common';
 import { EmailService } from './email.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 export type BodyEmail = {
   to: string[];
@@ -8,6 +9,7 @@ export type BodyEmail = {
   attachments?: { filename: string; path: string; contentType?: string }[];
 };
 
+@UseGuards(AuthGuard)
 @Controller('email')
 export class EmailController {
   constructor(private emailService: EmailService) {}

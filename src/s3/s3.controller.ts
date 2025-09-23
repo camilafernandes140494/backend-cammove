@@ -9,9 +9,12 @@ import {
   Param,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { AuthGuard } from 'src/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('files')
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
