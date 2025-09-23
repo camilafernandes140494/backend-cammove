@@ -55,7 +55,7 @@ export class AuthService {
       const user = await this.verifyToken(data.idToken);
 
       // Retorna os tokens
-      return user;
+      return {...user, token: data.idToken, refreshToken: data.refreshToken};
     } catch (error) {
       throw new Error('Usuário ou senha inválidos' + error.message);
     }
