@@ -9,7 +9,6 @@ import {
 import { TermsOfUseService } from './termsOfUse.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 
-@UseGuards(AuthGuard)
 @Controller('terms-of-use')
 export class TermsOfUseController {
   constructor(
@@ -28,7 +27,8 @@ export class TermsOfUseController {
   async getAllTermsOfUse() {
     return this.termsOfUseService.getAllTermsOfUse();
   }
-
+  
+  @UseGuards(AuthGuard)
   @Put()
   @HttpCode(HttpStatus.OK)
   async updateTermsOfUse() {
