@@ -13,6 +13,9 @@ export class AuthService {
       });
       return userRecord;
     } catch (error) {
+      if (error.code === 'auth/email-already-exists') {
+      throw new Error('Esse e-mail já está registrado.');
+    }
       throw new Error('Erro ao registrar usuário: ' + error.message);
     }
   }
