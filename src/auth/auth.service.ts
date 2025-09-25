@@ -1,5 +1,5 @@
 // src/auth/auth.service.ts
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import admin from '../firebase/firebase.config';
 
 @Injectable()
@@ -12,12 +12,18 @@ export class AuthService {
         password,
       });
       return userRecord;
-    } catch (error) {
-      if (error.code === 'auth/email-already-exists') {
-      throw new Error('Esse e-mail já está registrado.');
+    } catch (error: any) {
+    if (error.code === "auth/email-already-exists") {
+      throw new HttpException(
+        { message: "Esse e-mail já está registrado." },
+        HttpStatus.BAD_REQUEST
+      );
     }
-      throw new Error('Erro ao registrar usuário: ' + error.message);
-    }
+    throw new HttpException(
+      { message: "Erro ao registrar usuário: " + error.message },
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
   }
   // Método para verificar o token do usuário
   async verifyToken(idToken: string): Promise<any> {
