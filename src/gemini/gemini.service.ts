@@ -43,7 +43,7 @@ Regras:
 Formato da resposta:
 [
   {
-    "name": "nome do exercício",
+    "name": "nome do exercício, sem colocar o nome do exercício em inglês entre parênteses. somente o básico",
     "sets": número de séries (ex: 3),
     "repetitions": número de repetições por série (ex: 12),
     "category": ["Peito"],
