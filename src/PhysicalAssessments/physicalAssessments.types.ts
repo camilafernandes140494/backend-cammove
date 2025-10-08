@@ -48,6 +48,29 @@ type MedicalHistory = {
   chronicPain: string;
 };
 
+type PhysicalActivityHistory = {
+  currentlyActive: string;      
+  activities: string;           
+  frequency: string;            
+};
+
+
+// 🆕 Hábitos de vida
+type Lifestyle = {
+  smoking: string;                  
+  alcoholConsumption: string;       
+  sleepQuality: string;            
+  stressLevel: string;           
+};
+
+type Nutrition = {
+  hasNutritionFollowUp: string;    
+  mealsPerDay: string;
+  foodQuality: string;            
+  dietaryRestrictions: string;     
+};
+
+
 export type PhysicalAssessmentData = {
   // Medições Corporais
   studentName: string;
@@ -79,4 +102,10 @@ export type PhysicalAssessmentData = {
   observations: string;
   // Data da avaliação
   assessmentDate: string;
+
+  PhysicalActivityHistory: PhysicalActivityHistory;
+
+  Lifestyle:Lifestyle;
+
+  Nutrition: Nutrition;
 };
