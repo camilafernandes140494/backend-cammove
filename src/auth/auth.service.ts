@@ -111,34 +111,58 @@ export class AuthService {
   }
 
   // src/auth/auth.service.ts
-async loginWithGoogle(idToken: string): Promise<any> {
-  try {
-    // Valida o idToken enviado pelo frontend
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    const { uid, email } = decodedToken;
+ async loginWithGoogle(googleIdToken: string): Promise<any> {
+    const apiKey = process.env.APIKEY!;
+    const exchangeUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=${apiKey}`;
 
-    // Busca o usuário no Firebase Admin
-    let userRecord;
-    try {
-      userRecord = await admin.auth().getUser(uid);
-    } catch (error) {
-      // Se não existir, você pode criar manualmente ou retornar erro
-      userRecord = await admin.auth().createUser({ uid, email });
-    }
+    try {
+      // 1. TROCA DE TOKEN: Troca o Google ID Token (do Expo) por um Firebase ID Token
+      const exchangeResponse = await fetch(exchangeUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          // O postBody usa query string format (não JSON)
+          postBody: `id_token=${googleIdToken}&providerId=google.com`,
+          requestUri: 'http://localhost', // URL arbitrária, mas necessária
+          returnSecureToken: true, // Pede o idToken (Firebase) e refreshToken
+        }),
+      });
 
-    return {
-      uid: userRecord.uid,
-      email: userRecord.email,
-      displayName: userRecord.displayName || null,
-      photoURL: userRecord.photoURL || null,
-      token: idToken, // token do Google recebido
-    };
-  } catch (error) {
-    throw new HttpException(
-      { message: 'Erro ao autenticar com Google: ' + error.message },
-      HttpStatus.UNAUTHORIZED
-    );
-  }
-}
+      if (!exchangeResponse.ok) {
+        const errorData = await exchangeResponse.json();
+        console.error("Erro na troca de token:", errorData);
+        throw new Error(
+          `Falha na troca de token: ${errorData.error.message}`,
+        );
+      }
+
+      const exchangeData = await exchangeResponse.json();
+      const firebaseIdToken = exchangeData.idToken;
+      const refreshToken = exchangeData.refreshToken;
+        
+      // 2. VERIFICAÇÃO: Agora, verifica o ID Token emitido pelo Firebase
+      const decodedToken = await admin.auth().verifyIdToken(firebaseIdToken);
+      const { uid, email, name, picture } = decodedToken;
+
+      // O Admin SDK garante que o usuário existe no Firebase.
+      // O `decodedToken` já tem as informações do usuário.
+      
+      return {
+        uid: uid,
+        email: email,
+        displayName: name || null,
+        photoURL: picture || null,
+        token: firebaseIdToken, // O token correto para usar em rotas protegidas
+        refreshToken: refreshToken,
+      };
+    } catch (error: any) {
+      throw new HttpException(
+        { message: 'Erro ao autenticar com Google: ' + error.message },
+        HttpStatus.UNAUTHORIZED
+      );
+    }
+  }
 
 }

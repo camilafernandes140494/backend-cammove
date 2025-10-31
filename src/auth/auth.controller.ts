@@ -40,8 +40,8 @@ export class AuthController {
   // src/auth/auth.controller.ts
 @Post('google-login')
 @HttpCode(HttpStatus.OK)
-async googleLogin(@Body() body: { idToken: string }) {
-  const { idToken } = body;
-  return this.authService.loginWithGoogle(idToken);
+async googleLogin(@Body() body: { googleIdToken: string }) {
+  const { googleIdToken } = body;
+  return this.authService.loginWithGoogle(googleIdToken);
 }
 }
