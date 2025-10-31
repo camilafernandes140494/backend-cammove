@@ -36,4 +36,12 @@ export class AuthController {
     const { email } = body;
     return this.authService.sendPasswordResetEmail(email);
   }
+
+  // src/auth/auth.controller.ts
+@Post('google-login')
+@HttpCode(HttpStatus.OK)
+async googleLogin(@Body() body: { idToken: string }) {
+  const { idToken } = body;
+  return this.authService.loginWithGoogle(idToken);
+}
 }

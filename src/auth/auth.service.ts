@@ -109,4 +109,36 @@ export class AuthService {
       throw new Error('Erro ao enviar e-mail de redefinição: ' + error.message);
     }
   }
+
+  // src/auth/auth.service.ts
+async loginWithGoogle(idToken: string): Promise<any> {
+  try {
+    // Valida o idToken enviado pelo frontend
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const { uid, email } = decodedToken;
+
+    // Busca o usuário no Firebase Admin
+    let userRecord;
+    try {
+      userRecord = await admin.auth().getUser(uid);
+    } catch (error) {
+      // Se não existir, você pode criar manualmente ou retornar erro
+      userRecord = await admin.auth().createUser({ uid, email });
+    }
+
+    return {
+      uid: userRecord.uid,
+      email: userRecord.email,
+      displayName: userRecord.displayName || null,
+      photoURL: userRecord.photoURL || null,
+      token: idToken, // token do Google recebido
+    };
+  } catch (error) {
+    throw new HttpException(
+      { message: 'Erro ao autenticar com Google: ' + error.message },
+      HttpStatus.UNAUTHORIZED
+    );
+  }
+}
+
 }
