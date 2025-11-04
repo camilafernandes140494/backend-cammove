@@ -15,7 +15,7 @@ export type User = {
   phone: string;
   deviceToken?: string
   termsOfUse?: string
-  authProvider: 'EMAIL' | 'GOOGLE' ;
+  authProvider: 'EMAIL' | 'GOOGLE';
 
 };
 

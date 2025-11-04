@@ -117,6 +117,8 @@ export class AuthService {
 async loginWithGoogle(googleIdToken: string): Promise<any> {
   const apiKey = process.env.APIKEY!;
   const exchangeUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=${apiKey}`;
+  let userData = null
+  let isNewUser = true;
 
   try {
     // 1. Troca o token Google -> Firebase
@@ -145,7 +147,9 @@ async loginWithGoogle(googleIdToken: string): Promise<any> {
 
     // 3. Verifica se o usuário já existe no Firestore
     try {
-      await this.usersService.getUserById(uid);
+      userData = await this.usersService.getUserById(uid);
+      isNewUser = false;
+      
     } catch {
       // Se não existir, cria
       await this.usersService.createUser(uid, {
@@ -162,6 +166,7 @@ async loginWithGoogle(googleIdToken: string): Promise<any> {
         phone:'',
         authProvider: 'GOOGLE',
       });
+      isNewUser = true;
     }
 
     // 4. Retorna os dados
@@ -172,6 +177,8 @@ async loginWithGoogle(googleIdToken: string): Promise<any> {
       image: picture || null,
       token: firebaseIdToken,
       refreshToken,
+      user: userData,
+      isNewUser
     };
   } catch (error: any) {
     throw new HttpException(
