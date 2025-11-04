@@ -1,1 +1,1 @@
-export type PermissionType = 'TEACHER' | 'STUDENT' | 'ADMIN';
+export type PermissionType = 'TEACHER' | 'STUDENT' | 'SUPERTEACHER';

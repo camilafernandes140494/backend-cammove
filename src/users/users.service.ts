@@ -9,16 +9,22 @@ export class UsersService {
   // Método para salvar usuário no Firestore
   async createUser(id: string, userData: User): Promise<any> {
     try {
-      const newUserRef = this.firestore.collection('users').doc(id); // Cria um novo documento com ID automático
+      const newUserRef = this.firestore.collection('users').doc(id);
       const user = await newUserRef.get();
 
       if (!user.exists) {
-        await newUserRef.set(userData);
+        // Cria o usuário com authProvider padrão (se não existir no userData)
+        await newUserRef.set({
+          ...userData,
+          authProvider: userData.authProvider || 'EMAIL',
+        });
+        return { message: 'Usuário criado com sucesso', id: newUserRef.id };
+      } else {
+        // Atualiza apenas se o usuário já existe
+        await newUserRef.update(userData);
+        return { message: 'Usuário atualizado com sucesso', id: newUserRef.id };
       }
-      // Salva os dados no Firestore
-      await newUserRef.update(userData);
-      return { message: 'Usuário criado com sucesso', id: newUserRef.id };
-    } catch (error) {
+    } catch (error: any) {
       throw new Error('Erro ao salvar usuário: ' + error.message);
     }
   }

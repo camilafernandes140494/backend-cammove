@@ -6,7 +6,7 @@ export type User = {
   gender: string;
   image: string;
   birthDate: string;
-  permission: PermissionType  | null;
+  permission: PermissionType;
   createdAt: string;
   updatedAt: string;
   deletedAt: string;
@@ -15,6 +15,8 @@ export type User = {
   phone: string;
   deviceToken?: string
   termsOfUse?: string
+  authProvider: 'EMAIL' | 'GOOGLE' ;
+
 };
 
 export type UpdateUser = Partial<User>;

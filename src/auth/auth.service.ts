@@ -160,6 +160,7 @@ async loginWithGoogle(googleIdToken: string): Promise<any> {
         birthDate:'',
         permission: null,
         phone:'',
+        authProvider: 'GOOGLE',
       });
     }
 
