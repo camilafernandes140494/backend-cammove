@@ -103,9 +103,12 @@ export type PhysicalAssessmentData = {
   // Data da avaliação
   assessmentDate: string;
 
+    // Histórico de Atividade Física
   PhysicalActivityHistory: PhysicalActivityHistory;
 
+  // Hábitos de Vida
   Lifestyle:Lifestyle;
 
+    // 🆕 Nutrição
   Nutrition: Nutrition;
 };

@@ -1,10 +1,13 @@
 // src/auth/auth.service.ts
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import admin from '../firebase/firebase.config';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
   // Método para registrar um usuário
+    constructor(private readonly usersService: UsersService) {} 
+
   async registerUser(email: string, password: string): Promise<any> {
     try {
       const userRecord = await admin.auth().createUser({
@@ -111,58 +114,71 @@ export class AuthService {
   }
 
   // src/auth/auth.service.ts
- async loginWithGoogle(googleIdToken: string): Promise<any> {
-    const apiKey = process.env.APIKEY!;
-    const exchangeUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=${apiKey}`;
+async loginWithGoogle(googleIdToken: string): Promise<any> {
+  const apiKey = process.env.APIKEY!;
+  const exchangeUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=${apiKey}`;
 
-    try {
-      // 1. TROCA DE TOKEN: Troca o Google ID Token (do Expo) por um Firebase ID Token
-      const exchangeResponse = await fetch(exchangeUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          // O postBody usa query string format (não JSON)
-          postBody: `id_token=${googleIdToken}&providerId=google.com`,
-          requestUri: 'http://localhost', // URL arbitrária, mas necessária
-          returnSecureToken: true, // Pede o idToken (Firebase) e refreshToken
-        }),
-      });
+  try {
+    // 1. Troca o token Google -> Firebase
+    const exchangeResponse = await fetch(exchangeUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        postBody: `id_token=${googleIdToken}&providerId=google.com`,
+        requestUri: 'http://localhost',
+        returnSecureToken: true,
+      }),
+    });
 
-      if (!exchangeResponse.ok) {
-        const errorData = await exchangeResponse.json();
-        console.error("Erro na troca de token:", errorData);
-        throw new Error(
-          `Falha na troca de token: ${errorData.error.message}`,
-        );
-      }
+    if (!exchangeResponse.ok) {
+      const errorData = await exchangeResponse.json();
+      throw new Error(`Falha na troca de token: ${errorData.error.message}`);
+    }
 
-      const exchangeData = await exchangeResponse.json();
-      const firebaseIdToken = exchangeData.idToken;
-      const refreshToken = exchangeData.refreshToken;
-        
-      // 2. VERIFICAÇÃO: Agora, verifica o ID Token emitido pelo Firebase
-      const decodedToken = await admin.auth().verifyIdToken(firebaseIdToken);
-      const { uid, email, name, picture } = decodedToken;
+    const exchangeData = await exchangeResponse.json();
+    const firebaseIdToken = exchangeData.idToken;
+    const refreshToken = exchangeData.refreshToken;
 
-      // O Admin SDK garante que o usuário existe no Firebase.
-      // O `decodedToken` já tem as informações do usuário.
-      
-      return {
-        uid: uid,
-        email: email,
-        displayName: name || null,
-        photoURL: picture || null,
-        token: firebaseIdToken, // O token correto para usar em rotas protegidas
-        refreshToken: refreshToken,
-      };
-    } catch (error: any) {
-      throw new HttpException(
-        { message: 'Erro ao autenticar com Google: ' + error.message },
-        HttpStatus.UNAUTHORIZED
-      );
-    }
-  }
+    // 2. Verifica o ID Token do Firebase
+    const decodedToken = await admin.auth().verifyIdToken(firebaseIdToken);
+    const { uid, email, name, picture } = decodedToken;
+
+    // 3. Verifica se o usuário já existe no Firestore
+    try {
+      await this.usersService.getUserById(uid);
+    } catch {
+      // Se não existir, cria
+      await this.usersService.createUser(uid, {
+        email,
+        name: name || '',
+        image: picture,
+        createdAt: new Date().toISOString(),
+        updatedAt: '',
+        deletedAt: '',
+        status: null,
+        gender:'',
+        birthDate:'',
+        permission: null,
+        phone:'',
+      });
+    }
+
+    // 4. Retorna os dados
+    return {
+      uid,
+      email,
+      name: name || null,
+      image: picture || null,
+      token: firebaseIdToken,
+      refreshToken,
+    };
+  } catch (error: any) {
+    throw new HttpException(
+      { message: 'Erro ao autenticar com Google: ' + error.message },
+      HttpStatus.UNAUTHORIZED,
+    );
+  }
+}
+
 
 }
