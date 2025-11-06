@@ -17,18 +17,18 @@ export class RelationshipsService {
       // Verificar se ambos os usuários existem e têm as permissões corretas
       const teacher = await teacherRef.get();
       const student = await studentRef.get();
+      const validTeacherPermissions = ['TEACHER', 'SUPERTEACHER'];
 
       if (!teacher.exists || !student.exists) {
         throw new Error('Professor ou aluno não encontrado');
       }
 
       if (
-        teacher.data()?.permission !== 'TEACHER' ||
+        !validTeacherPermissions.includes(teacher.data()?.permission) ||
         student.data()?.permission !== 'STUDENT'
       ) {
         throw new Error('Permissões inválidas para criar vínculo');
       }
-
       const relationshipRef = this.firestore.collection('relationships').doc();
       await relationshipRef.set({
         teacherId,
