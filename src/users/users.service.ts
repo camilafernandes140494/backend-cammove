@@ -114,44 +114,54 @@ export class UsersService {
     return { ...userData, id: userDoc.id };
   }
 
-  async getUsers(filters: UpdateUser): Promise<User[]> {
-    let query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> =
-      this.firestore.collection('users');
+ async getUsers(filters: UpdateUser): Promise<User[]> {
+  let query: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> =
+    this.firestore.collection('users');
 
-    // Aplica os filtros fornecidos
-    if (filters.name) {
-      query = query
-        .orderBy('name')
-        .startAt(filters.name)
-        .endAt(filters.name + '\uf8ff');
-    }
-    if (filters.gender) {
-      query = query.where('gender', '==', filters.gender);
-    }
-    if (filters.deletedAt) {
-      query = query.where('deletedAt', '==', filters.deletedAt);
-    }
-    if (filters.permission) {
+  if (filters.name) {
+    query = query
+      .orderBy('name')
+      .startAt(filters.name)
+      .endAt(filters.name + '\uf8ff');
+  }
+
+  if (filters.gender) {
+    query = query.where('gender', '==', filters.gender);
+  }
+
+  if (filters.deletedAt) {
+    query = query.where('deletedAt', '==', filters.deletedAt);
+  }
+
+  if (filters.permission) {
+    if (Array.isArray(filters.permission)) {
+      // Caso receba um array de permissões
+      query = query.where('permission', 'in', filters.permission);
+    } else {
+      // Caso seja uma string única
       query = query.where('permission', '==', filters.permission);
     }
-    if (filters.email) {
-      query = query
-        .orderBy('email')
-        .startAt(filters.email)
-        .endAt(filters.email + '\uf8ff');
-    }
-
-    const snapshot = await query.get();
-    if (snapshot.empty) {
-      return [];
-    }
-
-    const users: User[] = [];
-    snapshot.forEach((doc) => {
-      const data = doc.data() as User;
-      users.push({ ...data, id: doc.id });
-    });
-
-    return users;
   }
+
+  if (filters.email) {
+    query = query
+      .orderBy('email')
+      .startAt(filters.email)
+      .endAt(filters.email + '\uf8ff');
+  }
+
+  const snapshot = await query.get();
+  if (snapshot.empty) {
+    return [];
+  }
+
+  const users: User[] = [];
+  snapshot.forEach((doc) => {
+    const data = doc.data() as User;
+    users.push({ ...data, id: doc.id });
+  });
+
+  return users;
+}
+
 }
