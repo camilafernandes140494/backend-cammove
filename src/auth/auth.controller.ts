@@ -37,6 +37,13 @@ export class AuthController {
     return this.authService.sendPasswordResetEmail(email);
   }
 
+@Post('refresh-token')
+@HttpCode(HttpStatus.OK)
+async refreshToken(@Body() body: { refreshToken: string; }) {
+  const { refreshToken } = body;
+  return this.authService.refreshAccessToken(refreshToken);
+}
+
   // src/auth/auth.controller.ts
 @Post('google-login')
 @HttpCode(HttpStatus.OK)

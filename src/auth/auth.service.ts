@@ -113,6 +113,58 @@ export class AuthService {
     }
   }
 
+async refreshAccessToken(
+  refreshToken: string
+): Promise<{ idToken: string; refreshToken: string; expiresIn: number }> {
+  if (!refreshToken) {
+    throw new HttpException(
+      { message: 'Refresh token é obrigatório.' },
+      HttpStatus.BAD_REQUEST
+    );
+  }
+
+  const url = `https://securetoken.googleapis.com/v1/token?key=${process.env.APIKEY!}`;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        grant_type: 'refresh_token',
+        refresh_token: refreshToken,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error('Erro na renovação do token Firebase:', data);
+      throw new HttpException(
+        {
+          message: 'Sessão inválida ou expirada. Faça login novamente.',
+          code: data.error?.message || 'auth/invalid-refresh-token',
+        },
+        HttpStatus.UNAUTHORIZED
+      );
+    }
+
+    // Retorna os novos tokens e tempo de expiração
+    return {
+      idToken: data.id_token,
+      refreshToken: data.refresh_token,
+      expiresIn: Number(data.expires_in), // geralmente "3600"
+    };
+  } catch (error) {
+    if (error instanceof HttpException) throw error;
+
+    throw new HttpException(
+      { message: 'Erro interno ao renovar token.' },
+      HttpStatus.INTERNAL_SERVER_ERROR
+    );
+  }
+}
+
+
   // src/auth/auth.service.ts
 async loginWithGoogle(googleIdToken: string): Promise<any> {
   const apiKey = process.env.APIKEY!;
