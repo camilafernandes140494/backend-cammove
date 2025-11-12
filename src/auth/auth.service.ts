@@ -126,13 +126,16 @@ async refreshAccessToken(
   const url = `https://securetoken.googleapis.com/v1/token?key=${process.env.APIKEY!}`;
 
   try {
+    // 🔧 Atenção: este endpoint requer application/x-www-form-urlencoded
+    const body = new URLSearchParams({
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+    });
+
     const response = await fetch(url, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-      }),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body.toString(),
     });
 
     const data = await response.json();
@@ -148,11 +151,10 @@ async refreshAccessToken(
       );
     }
 
-    // Retorna os novos tokens e tempo de expiração
     return {
       idToken: data.id_token,
       refreshToken: data.refresh_token,
-      expiresIn: Number(data.expires_in), // geralmente "3600"
+      expiresIn: Number(data.expires_in),
     };
   } catch (error) {
     if (error instanceof HttpException) throw error;
@@ -163,6 +165,7 @@ async refreshAccessToken(
     );
   }
 }
+
 
 
   // src/auth/auth.service.ts
