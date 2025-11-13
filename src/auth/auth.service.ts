@@ -184,6 +184,7 @@ async loginWithGoogle(googleIdToken: string): Promise<any> {
         postBody: `id_token=${googleIdToken}&providerId=google.com`,
         requestUri: 'http://localhost',
         returnSecureToken: true,
+        returnRefreshToken: true
       }),
     });
 
