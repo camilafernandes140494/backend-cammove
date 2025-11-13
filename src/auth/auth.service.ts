@@ -234,18 +234,7 @@ async loginWithGoogle(googleIdToken: string): Promise<any> {
       token: firebaseIdToken,
       refreshToken,
       user: userData,
-      isNewUser,
-      _debug: {
-      exchangeDataKeys: Object.keys(exchangeData),
-      hasIdToken: !!exchangeData.idToken,
-      hasRefreshToken: !!exchangeData.refreshToken,
-      hasOauthRefreshToken: !!exchangeData.oauthRefreshToken,
-      allTokenFields: {
-        refreshToken: exchangeData.refreshToken,
-        oauthRefreshToken: exchangeData.oauthRefreshToken,
-        oauthAccessToken: !!exchangeData.oauthAccessToken
-    }
-  }
+      isNewUser
     };
   } catch (error: any) {
     throw new HttpException(
