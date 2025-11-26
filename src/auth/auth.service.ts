@@ -307,7 +307,7 @@ async loginWithApple(appleIdToken: string): Promise<any> {
       uid,
       email,
       name: name || null,
-      image: avatarUrl,
+      image: picture || null,
       token: firebaseIdToken,
       refreshToken,
       user: userData,
