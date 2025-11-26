@@ -245,78 +245,82 @@ async loginWithGoogle(googleIdToken: string): Promise<any> {
 }
 
 
-async loginWithApple(appleIdToken: string): Promise<any> {
+async loginWithApple(
+  appleIdToken: string,
+  fullName?: string | null,
+  emailFromApple?: string | null
+): Promise<any> {
   const apiKey = process.env.APIKEY!;
   const exchangeUrl = `https://identitytoolkit.googleapis.com/v1/accounts:signInWithIdp?key=${apiKey}`;
-  let userData = null;
-  let isNewUser = true;
 
   try {
-    // 1. Troca o token Apple -> Firebase
+    // Troca token Apple -> Firebase
     const exchangeResponse = await fetch(exchangeUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         postBody: `id_token=${appleIdToken}&providerId=apple.com`,
-        requestUri: process.env.REQUEST_URI || 'http://localhost',
+        requestUri: process.env.REQUEST_URI || "http://localhost",
         returnSecureToken: true,
-        returnRefreshToken: true
+        returnRefreshToken: true,
       }),
     });
 
     if (!exchangeResponse.ok) {
-      const errorData = await exchangeResponse.json();
-      throw new Error(`Falha na troca de token: ${errorData.error.message}`);
+      const err = await exchangeResponse.json();
+      throw new Error(err.error.message);
     }
 
     const exchangeData = await exchangeResponse.json();
     const firebaseIdToken = exchangeData.idToken;
     const refreshToken = exchangeData.refreshToken;
 
-    // 2. Verifica o ID Token do Firebase
-    const decodedToken = await admin.auth().verifyIdToken(firebaseIdToken);
-    const { uid, email, name, picture } = decodedToken;
+    const decoded = await admin.auth().verifyIdToken(firebaseIdToken);
+    const { uid, email: firebaseEmail, name: firebaseName, picture } = decoded;
 
-    // 3. Gera avatar a partir do nome ou email
+    const finalEmail = emailFromApple || firebaseEmail || null;
+    const finalName = fullName || firebaseName || null;
 
-    // 4. Verifica se o usuário já existe no Firestore
+    let userData;
+    let isNewUser = true;
+
     try {
       userData = await this.usersService.getUserById(uid);
       isNewUser = false;
     } catch {
-      // Se não existir, cria
+      // cria novo usuário
       await this.usersService.createUser(uid, {
-        email,
-        name: name || '',
-        image: picture || '', // Avatar gerado
+        email: finalEmail,
+        name: finalName || "",
+        image: picture || "",
         createdAt: new Date().toISOString(),
-        updatedAt: '',
-        deletedAt: '',
+        updatedAt: "",
+        deletedAt: "",
         status: null,
-        gender: '',
-        birthDate: '',
+        gender: "",
+        birthDate: "",
         permission: null,
-        phone: '',
-        authProvider: 'APPLE',
+        phone: "",
+        authProvider: "APPLE",
       });
       isNewUser = true;
     }
 
-    // 5. Retorna os dados
     return {
       uid,
-      email,
-      name: name || null,
+      email: finalEmail,
+      name: finalName,
       image: picture || null,
       token: firebaseIdToken,
       refreshToken,
       user: userData,
-      isNewUser
+      isNewUser,
     };
+
   } catch (error: any) {
     throw new HttpException(
-      { message: 'Erro ao autenticar com Apple: ' + error.message },
-      HttpStatus.UNAUTHORIZED,
+      { message: "Erro ao autenticar com Apple: " + error.message },
+      HttpStatus.UNAUTHORIZED
     );
   }
 }

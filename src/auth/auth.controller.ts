@@ -54,9 +54,8 @@ async googleLogin(@Body() body: { googleIdToken: string }) {
 
 @Post('apple-login')
 @HttpCode(HttpStatus.OK)
-async appleLogin(@Body() body: { appleIdToken: string }) {
-  const { appleIdToken } = body;
-  return this.authService.loginWithApple(appleIdToken);
+async appleLogin(@Body() body: {  appleIdToken: string; fullName?: any; email?: string | null }) {
+  return this.authService.loginWithApple(body.appleIdToken, body.fullName, body.email);
 }
 
 }
