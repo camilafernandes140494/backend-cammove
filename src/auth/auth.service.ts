@@ -258,7 +258,7 @@ async loginWithApple(appleIdToken: string): Promise<any> {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         postBody: `id_token=${appleIdToken}&providerId=apple.com`,
-        requestUri: 'http://localhost',
+        requestUri: process.env.REQUEST_URI || 'http://localhost',
         returnSecureToken: true,
         returnRefreshToken: true
       }),
@@ -275,9 +275,12 @@ async loginWithApple(appleIdToken: string): Promise<any> {
 
     // 2. Verifica o ID Token do Firebase
     const decodedToken = await admin.auth().verifyIdToken(firebaseIdToken);
-    const { uid, email, name, picture } = decodedToken;
+    const { uid, email, name } = decodedToken;
 
-    // 3. Verifica se o usuário já existe no Firestore
+    // 3. Gera avatar a partir do nome ou email
+    const avatarUrl = this.generateAvatarUrl(name || email);
+
+    // 4. Verifica se o usuário já existe no Firestore
     try {
       userData = await this.usersService.getUserById(uid);
       isNewUser = false;
@@ -286,7 +289,7 @@ async loginWithApple(appleIdToken: string): Promise<any> {
       await this.usersService.createUser(uid, {
         email,
         name: name || '',
-        image: picture,
+        image: avatarUrl, // Avatar gerado
         createdAt: new Date().toISOString(),
         updatedAt: '',
         deletedAt: '',
@@ -300,12 +303,12 @@ async loginWithApple(appleIdToken: string): Promise<any> {
       isNewUser = true;
     }
 
-    // 4. Retorna os dados
+    // 5. Retorna os dados
     return {
       uid,
       email,
       name: name || null,
-      image: picture || null,
+      image: avatarUrl,
       token: firebaseIdToken,
       refreshToken,
       user: userData,
@@ -317,6 +320,20 @@ async loginWithApple(appleIdToken: string): Promise<any> {
       HttpStatus.UNAUTHORIZED,
     );
   }
+}
+
+// Método auxiliar para gerar avatar
+private generateAvatarUrl(nameOrEmail: string): string {
+  // Opção 1: Usar DiceBear (gera avatares baseado em seed)
+  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(nameOrEmail)}`;
+  
+  // Opção 2: Usar Gravatar (se quiser email)
+  // const hash = require('crypto').createHash('md5').update(email.toLowerCase()).digest('hex');
+  // return `https://www.gravatar.com/avatar/${hash}?d=identicon`;
+  
+  // Opção 3: Usar initials (requer biblioteca)
+  // const initials = nameOrEmail.split(' ').map(n => n[0]).join('').toUpperCase();
+  // return `https://ui-avatars.com/api/?name=${initials}&background=random`;
 }
 
 }
