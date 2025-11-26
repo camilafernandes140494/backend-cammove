@@ -275,10 +275,9 @@ async loginWithApple(appleIdToken: string): Promise<any> {
 
     // 2. Verifica o ID Token do Firebase
     const decodedToken = await admin.auth().verifyIdToken(firebaseIdToken);
-    const { uid, email, name } = decodedToken;
+    const { uid, email, name, picture } = decodedToken;
 
     // 3. Gera avatar a partir do nome ou email
-    const avatarUrl = this.generateAvatarUrl(name || email);
 
     // 4. Verifica se o usuário já existe no Firestore
     try {
@@ -289,7 +288,7 @@ async loginWithApple(appleIdToken: string): Promise<any> {
       await this.usersService.createUser(uid, {
         email,
         name: name || '',
-        image: avatarUrl, // Avatar gerado
+        image: picture || '', // Avatar gerado
         createdAt: new Date().toISOString(),
         updatedAt: '',
         deletedAt: '',
@@ -322,18 +321,6 @@ async loginWithApple(appleIdToken: string): Promise<any> {
   }
 }
 
-// Método auxiliar para gerar avatar
-private generateAvatarUrl(nameOrEmail: string): string {
-  // Opção 1: Usar DiceBear (gera avatares baseado em seed)
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(nameOrEmail)}`;
-  
-  // Opção 2: Usar Gravatar (se quiser email)
-  // const hash = require('crypto').createHash('md5').update(email.toLowerCase()).digest('hex');
-  // return `https://www.gravatar.com/avatar/${hash}?d=identicon`;
-  
-  // Opção 3: Usar initials (requer biblioteca)
-  // const initials = nameOrEmail.split(' ').map(n => n[0]).join('').toUpperCase();
-  // return `https://ui-avatars.com/api/?name=${initials}&background=random`;
-}
+
 
 }
