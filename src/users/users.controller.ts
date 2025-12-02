@@ -9,6 +9,7 @@ import {
   Get,
   Query,
   UseGuards,
+  Delete,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User, UpdateUser } from './user.types'; // Importando o tipo User e UpdateUserDto
@@ -60,6 +61,7 @@ export class UsersController {
       email,
       phone,
       status = 'ACTIVE',
+      authProvider
     } = body;
 
     return this.usersService.createUser(id, {
@@ -74,6 +76,7 @@ export class UsersController {
       deletedAt,
       status,
       phone,
+      authProvider,
     });
   }
 
@@ -134,6 +137,16 @@ export class UsersController {
       throw error;
     }
   }
+
+
+  @Delete(':id')
+  async deleteUser(
+    @Param('id') id: string,
+    @Param('teacherId') teacherId: string,
+  ) {
+    return this.usersService.deleteUser(id, teacherId);
+  }
+
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)

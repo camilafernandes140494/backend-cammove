@@ -164,4 +164,82 @@ export class UsersService {
   return users;
 }
 
+async deleteUser(id: string, teacherId?: string): Promise<any> {
+  try {
+    const userRef = this.firestore.collection('users').doc(id);
+    const workoutRef = this.firestore.collection('workouts').doc(id);
+    const workoutsDayRef = this.firestore.collection('workoutsDay').doc(id);
+    const assessmentRef = this.firestore.collection('assessments').doc(id);
+    const assessmentsDayRef = this.firestore.collection('assessmentsDay').doc(id);
+    const notificationRef = this.firestore.collection('notifications').doc(id);
+
+    const workoutsSummaryRef = teacherId
+      ? this.firestore.collection('workoutsSummary').doc(teacherId).collection('workouts').doc(id)
+      : null;
+
+    const assessmentsSummaryRef = teacherId
+      ? this.firestore.collection('assessmentsSummary').doc(teacherId).collection('assessments').doc(id)
+      : null;
+
+    const schedulesRef = teacherId
+      ? this.firestore.collection('schedules').doc(teacherId).collection('schedule')
+      : null;
+
+    // Verifica se user existe
+    const userDoc = await userRef.get();
+    if (!userDoc.exists) throw new Error('Usuário não encontrado');
+
+    // Apagar subcoleções do usuário
+    const subcollections = await userRef.listCollections();
+    const deleteSubcollections = subcollections.map(async (sub) => {
+      const docs = await sub.listDocuments();
+      return Promise.all(docs.map((doc) => doc.delete()));
+    });
+
+    // Lista de deletes paralelizados
+    const deleteTasks: Promise<any>[] = [
+      userRef.delete(),
+      workoutRef.get().then((doc) => doc.exists && workoutRef.delete()),
+      workoutsDayRef.get().then((doc) => doc.exists && workoutsDayRef.delete()),
+      assessmentRef.get().then((doc) => doc.exists && assessmentRef.delete()),
+      assessmentsDayRef.get().then((doc) => doc.exists && assessmentsDayRef.delete()),
+      notificationRef.get().then((doc) => doc.exists && notificationRef.delete()),
+    ];
+
+    // Summary do teacher
+    if (workoutsSummaryRef) {
+      deleteTasks.push(
+        workoutsSummaryRef.get().then((doc) => doc.exists && workoutsSummaryRef.delete())
+      );
+    }
+
+    if (assessmentsSummaryRef) {
+      deleteTasks.push(
+        assessmentsSummaryRef.get().then((doc) => doc.exists && assessmentsSummaryRef.delete())
+      );
+    }
+
+    // Delete schedules/*
+    if (schedulesRef) {
+      const scheduleDocs = await schedulesRef.listDocuments();
+      deleteTasks.push(...scheduleDocs.map((doc) => doc.delete()));
+    }
+
+    // Executa TUDO ao mesmo tempo
+    await Promise.all([
+      ...deleteSubcollections,
+      ...deleteTasks,
+    ]);
+
+    // Delete Auth (último para evitar erro se firestore falhar)
+    await admin.auth().deleteUser(id);
+
+    return { message: 'Usuário e todos os dados relacionados foram deletados com sucesso.' };
+
+  } catch (error: any) {
+    throw new Error('Erro ao deletar usuário: ' + error.message);
+  }
+}
+
+
 }
