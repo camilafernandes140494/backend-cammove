@@ -304,6 +304,7 @@ async loginWithApple(
         authProvider: "APPLE",
       });
 
+      userData = await this.usersService.getUserById(uid);
       isNewUser = true;
     }
 
