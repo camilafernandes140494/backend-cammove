@@ -35,6 +35,8 @@ import { NotificationsGateway } from './notifications/notifications.gateway';
 import { TermsOfUseService } from './termsOfUse/termsOfUse.service';
 import { TermsOfUseController } from './termsOfUse/termsOfUse.controller';
 import { AuthGuard } from './auth/auth.guard';
+import { PdfController } from './pdf/pdf.controller';
+import { PdfService } from './pdf/pdf.service';
 
 @Module({
   imports: [],
@@ -54,6 +56,7 @@ import { AuthGuard } from './auth/auth.guard';
     OpenAiController,
     GeminiController,
     NotificationsController,
+    PdfController,
     TermsOfUseController
   ],
   providers: [
@@ -75,6 +78,7 @@ import { AuthGuard } from './auth/auth.guard';
     NotificationsService,
     NotificationsGateway,
     TermsOfUseService,
+    PdfService,
     AuthGuard
   ],
 })
