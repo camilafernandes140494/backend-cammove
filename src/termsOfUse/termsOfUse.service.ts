@@ -1,6 +1,6 @@
 // termsOfUse.service.ts
 import admin from 'src/firebase/firebase.config';
-import { TermsOfUse } from './termsOfUse.types';
+import { TermsOfUse } from './TermsOfUse.types';
 
 const termsJson = require('./termsOfUse.json');
 
