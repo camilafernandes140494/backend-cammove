@@ -276,23 +276,22 @@ async loginWithApple(
     const refreshToken = exchangeData.refreshToken;
 
     const decoded = await admin.auth().verifyIdToken(firebaseIdToken);
-    const { uid, email: firebaseEmail, picture } = decoded;
+    const { uid, email: firebaseEmail, name: firebaseName, picture } = decoded;
 
     const finalEmail = emailFromApple || firebaseEmail || null;
 
     let userData;
-    let isNewUser = false;
+    let isNewUser = true;
 
+    // Tenta pegar o usuário já existente
     try {
-      // 🟢 Se já existe: pega o nome do BD
       userData = await this.usersService.getUserById(uid);
+      isNewUser = false;
     } catch {
-      // 🟡 Primeira vez logando: cria usando o nome da Apple
-      const nameFromApple = fullName || null;
-
+      // Usuário novo → cria
       await this.usersService.createUser(uid, {
         email: finalEmail,
-        name: nameFromApple || "",
+        name: fullName || firebaseName || "",
         image: picture || "",
         createdAt: new Date().toISOString(),
         updatedAt: "",
@@ -306,21 +305,15 @@ async loginWithApple(
       });
 
       isNewUser = true;
-
-      // Atualiza userData para retornar depois
-      userData = {
-        uid,
-        email: finalEmail,
-        name: nameFromApple,
-        image: picture || "",
-      };
     }
+
+    const finalName = fullName || firebaseName || userData?.name || null;
 
     return {
       uid,
-      email: userData.email,
-      name: userData.name,       // ⬅️ nome sempre vem do BD (ou da Apple no 1° login)
-      image: userData.image,
+      email: finalEmail,
+      name: finalName,
+      image: picture || userData?.image || null,
       token: firebaseIdToken,
       refreshToken,
       user: userData,
@@ -334,8 +327,6 @@ async loginWithApple(
     );
   }
 }
-
-
 
 
 
