@@ -279,19 +279,19 @@ async loginWithApple(
     const { uid, email: firebaseEmail, name: firebaseName, picture } = decoded;
 
     const finalEmail = emailFromApple || firebaseEmail || null;
-    const finalName = fullName || firebaseName || null;
 
     let userData;
     let isNewUser = true;
 
+    // Tenta pegar o usuário já existente
     try {
       userData = await this.usersService.getUserById(uid);
       isNewUser = false;
     } catch {
-      // cria novo usuário
+      // Usuário novo → cria
       await this.usersService.createUser(uid, {
         email: finalEmail,
-        name: finalName || "",
+        name: fullName || firebaseName || "",
         image: picture || "",
         createdAt: new Date().toISOString(),
         updatedAt: "",
@@ -303,14 +303,19 @@ async loginWithApple(
         phone: "",
         authProvider: "APPLE",
       });
+
+      // carregar o userData recém criado
+      userData = await this.usersService.getUserById(uid);
       isNewUser = true;
     }
+
+    const finalName = fullName || firebaseName || userData?.name || null;
 
     return {
       uid,
       email: finalEmail,
       name: finalName,
-      image: picture || null,
+      image: picture || userData?.image || null,
       token: firebaseIdToken,
       refreshToken,
       user: userData,
@@ -324,6 +329,7 @@ async loginWithApple(
     );
   }
 }
+
 
 
 
