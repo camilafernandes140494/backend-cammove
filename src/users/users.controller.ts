@@ -142,7 +142,7 @@ export class UsersController {
   @Delete(':id')
   async deleteUser(
     @Param('id') id: string,
-    @Param('teacherId') teacherId: string,
+  @Query('teacherId') teacherId?: string, 
   ) {
     return this.usersService.deleteUser(id, teacherId);
   }
