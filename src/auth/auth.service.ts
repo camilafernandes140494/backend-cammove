@@ -276,22 +276,23 @@ async loginWithApple(
     const refreshToken = exchangeData.refreshToken;
 
     const decoded = await admin.auth().verifyIdToken(firebaseIdToken);
-    const { uid, email: firebaseEmail, name: firebaseName, picture } = decoded;
+    const { uid, email: firebaseEmail, picture } = decoded;
 
     const finalEmail = emailFromApple || firebaseEmail || null;
-    const finalName = fullName || firebaseName || null;
 
     let userData;
-    let isNewUser = true;
+    let isNewUser = false;
 
     try {
+      // 🟢 Se já existe: pega o nome do BD
       userData = await this.usersService.getUserById(uid);
-      isNewUser = false;
     } catch {
-      // cria novo usuário
+      // 🟡 Primeira vez logando: cria usando o nome da Apple
+      const nameFromApple = fullName || null;
+
       await this.usersService.createUser(uid, {
         email: finalEmail,
-        name: finalName || "",
+        name: nameFromApple || "",
         image: picture || "",
         createdAt: new Date().toISOString(),
         updatedAt: "",
@@ -303,14 +304,23 @@ async loginWithApple(
         phone: "",
         authProvider: "APPLE",
       });
+
       isNewUser = true;
+
+      // Atualiza userData para retornar depois
+      userData = {
+        uid,
+        email: finalEmail,
+        name: nameFromApple,
+        image: picture || "",
+      };
     }
 
     return {
       uid,
-      email: finalEmail,
-      name: finalName,
-      image: picture || null,
+      email: userData.email,
+      name: userData.name,       // ⬅️ nome sempre vem do BD (ou da Apple no 1° login)
+      image: userData.image,
       token: firebaseIdToken,
       refreshToken,
       user: userData,
@@ -324,6 +334,7 @@ async loginWithApple(
     );
   }
 }
+
 
 
 
