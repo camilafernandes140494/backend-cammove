@@ -165,7 +165,10 @@ export class UsersService {
 }
 
 async deleteUser(id: string, teacherId?: string): Promise<any> {
+  let step = "Início"; // <-- Para rastrear em qual etapa caiu
+
   try {
+    step = "Criando referências";
     const userRef = this.firestore.collection('users').doc(id);
     const workoutRef = this.firestore.collection('workouts').doc(id);
     const workoutsDayRef = this.firestore.collection('workoutsDay').doc(id);
@@ -185,20 +188,24 @@ async deleteUser(id: string, teacherId?: string): Promise<any> {
       ? this.firestore.collection('schedules').doc(teacherId).collection('schedule')
       : null;
 
-    // Verifica se user existe
+    step = "Verificando se usuário existe";
     const userDoc = await userRef.get();
-    if (!userDoc.exists) throw new Error('Usuário não encontrado');
+    if (!userDoc.exists) throw new Error('Usuário não encontrado no Firestore');
 
-    // Apagar subcoleções do usuário
+    step = "Listando subcoleções";
     const subcollections = await userRef.listCollections();
+
+    step = "Deletando subcoleções";
     const deleteSubcollections = subcollections.map(async (sub) => {
       const docs = await sub.listDocuments();
-      return Promise.all(docs.map((doc) => doc.delete()));
+      return Promise.all(docs.map((doc) => doc.delete().catch(err => {
+        throw new Error(`Erro ao deletar doc ${sub.id}/${doc.id}: ${err.message}`);
+      })));
     });
 
-    // Lista de deletes paralelizados
+    step = "Deletando coleções principais";
     const deleteTasks: Promise<any>[] = [
-      userRef.delete(),
+      userRef.delete().catch(err => { throw new Error("Erro ao deletar users: " + err.message); }),
       workoutRef.get().then((doc) => doc.exists && workoutRef.delete()),
       workoutsDayRef.get().then((doc) => doc.exists && workoutsDayRef.delete()),
       assessmentRef.get().then((doc) => doc.exists && assessmentRef.delete()),
@@ -206,40 +213,55 @@ async deleteUser(id: string, teacherId?: string): Promise<any> {
       notificationRef.get().then((doc) => doc.exists && notificationRef.delete()),
     ];
 
-    // Summary do teacher
     if (workoutsSummaryRef) {
       deleteTasks.push(
-        workoutsSummaryRef.get().then((doc) => doc.exists && workoutsSummaryRef.delete())
+        workoutsSummaryRef.get().then((doc) =>
+          doc.exists && workoutsSummaryRef.delete().catch(err => {
+            throw new Error("Erro ao deletar workoutsSummary: " + err.message);
+          })
+        )
       );
     }
 
     if (assessmentsSummaryRef) {
       deleteTasks.push(
-        assessmentsSummaryRef.get().then((doc) => doc.exists && assessmentsSummaryRef.delete())
+        assessmentsSummaryRef.get().then((doc) =>
+          doc.exists && assessmentsSummaryRef.delete().catch(err => {
+            throw new Error("Erro ao deletar assessmentsSummary: " + err.message);
+          })
+        )
       );
     }
 
-    // Delete schedules/*
     if (schedulesRef) {
+      step = "Deletando schedules";
       const scheduleDocs = await schedulesRef.listDocuments();
-      deleteTasks.push(...scheduleDocs.map((doc) => doc.delete()));
+      deleteTasks.push(...scheduleDocs.map((doc) =>
+        doc.delete().catch(err => {
+          throw new Error(`Erro ao deletar schedules/${doc.id}: ${err.message}`);
+        })
+      ));
     }
 
-    // Executa TUDO ao mesmo tempo
+    step = "Executando deletes paralelos";
     await Promise.all([
       ...deleteSubcollections,
       ...deleteTasks,
     ]);
 
-    // Delete Auth (último para evitar erro se firestore falhar)
+    step = "Deletando usuário do Auth";
     await admin.auth().deleteUser(id);
 
-    return { message: 'Usuário e todos os dados relacionados foram deletados com sucesso.' };
+    return { message: 'Usuário deletado com sucesso' };
 
   } catch (error: any) {
-    throw new Error('Erro ao deletar usuário: ' + error.message);
+    console.error(`❌ ERRO NA ETAPA: ${step}`);
+    console.error(`❌ Detalhes:`, error);
+
+    throw new Error(`Falha na etapa "${step}": ${error.message}`);
   }
 }
+
 
 
 }
