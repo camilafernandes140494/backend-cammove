@@ -222,6 +222,7 @@ async loginWithGoogle(googleIdToken: string): Promise<any> {
         phone:'',
         authProvider: 'GOOGLE',
       });
+      userData = await this.usersService.getUserById(uid);
       isNewUser = true;
     }
 
